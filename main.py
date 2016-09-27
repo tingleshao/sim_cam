@@ -20,8 +20,10 @@
 
 # (***) There should be multiple structural configurations about how the video
 # stream is prepared.
-# The proposed plan is: having three layers. Each later consists of 4 tiles (2x2)
-# The current simulation program hard coded different video preparation structures
+# The proposed plan is: having three layers. Each later consists of 4 tiles
+#   (2x2)
+# The current simulation program hard coded different video preparation
+#   structures
 # a) single layer 2x2
 # b) two layers 2x2
 # c) three layters 2x2
@@ -47,7 +49,7 @@
 
 import argparse
 
-# TODO(chong): for now assume
+# TODO(chong): for now assume 1 layer 2x2 structure with trivial strategy 1
 def run(args):
     # call dispather, get model
     # use motion_generator, get motion
@@ -55,14 +57,26 @@ def run(args):
     # display simulation
     # save motion and simulation result
     # step 1: call dispather,
-    bandwidth = args.w 
+    bandwidth = args.w
     width = args.width
     height =  args.height
     alpha = args.a
     beta = args.b
     header_length = args.h
-    the_dispather = dispather(args)
 
+    the_dispather = dispather(args)
+    model = the_dispatcher.get_model()
+    the_motion_generator = motion_generator()
+    motion = the_motion_generator.get_motion()
+
+    the_simulator = simulator()
+    sim_result = the_simulator.simulate(model, motion, args)
+    saver = data_saver()
+    saver.save(model)
+    saver.save(sim_result)
+    plotter = plot_generator()
+    plotter.plot(sim_result, args)
+    print "Simulation done! Result saved to ... %s" % "foo/bar"
 
 def main():
     print "hello world, this is sim_cam main program"
@@ -80,6 +94,7 @@ def main():
     args = parser.parse_args()
     if args.verbosity:
         print "verbosity turned on"
+    # run the simulatoin
     run(args)
 
 if __name__ == '__main__':
