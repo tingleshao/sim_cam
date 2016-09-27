@@ -47,14 +47,21 @@
 
 import argparse
 
-
-def run():
+# TODO(chong): for now assume
+def run(args):
     # call dispather, get model
     # use motion_generator, get motion
     # use motion, model, param, generates simulation
     # display simulation
     # save motion and simulation result
     # step 1: call dispather,
+    bandwidth = args.w 
+    width = args.width
+    height =  args.height
+    alpha = args.a
+    beta = args.b
+    header_length = args.h
+    the_dispather = dispather(args)
 
 
 def main():
@@ -73,6 +80,7 @@ def main():
     args = parser.parse_args()
     if args.verbosity:
         print "verbosity turned on"
+    run(args)
 
 if __name__ == '__main__':
     main()
