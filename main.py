@@ -5,13 +5,18 @@
 # The progam would take a list of parameters, include
 #   available bandwidth w: the allowable bandwidth for the system to transmit
 #     video data from server side to the client side.
-#   alpha (a): the weight for the pixel overhead (H) term of the loss function
-#   beta (b): the weight for the average delay (D) term of the loss function
+#   a (alpha): the weight for the pixel overhead (H) term of the loss function
+#   b (beta): the weight for the average delay (D) term of the loss function
 #     (FYI, loss function: f(x) = aH + bD )
 #      H = xxx
 #      D = xxx
 #   h: the size of the additional data append to each H264 trunk of data,
-#   basically can be understood as header.
+#     basically can be understood as header.
+#   c: the config of the video service system, i.e., how many layers are there
+#     and how many tiles in each layer (how many tiles in x and y could also
+#     be taken into consideration as a detail thing since this will matter
+#     when the user moves the view point)
+#   s: whether to save the generated motion data and the simulation result data
 
 # (***) There should be multiple structural configurations about how the video
 # stream is prepared.
@@ -41,6 +46,15 @@
 # main python program that works as the entry point for the simulation software
 
 import argparse
+
+
+def run():
+    # call dispather, get model
+    # use motion_generator, get motion
+    # use motion, model, param, generates simulation
+    # display simulation
+    # save motion and simulation result
+    # step 1: call dispather,
 
 
 def main():
