@@ -14,3 +14,5 @@ class simulator:
         # model: information about the system
         # motion: user view point
         # args: other parameters
+        time_length = len(motion)
+        total_pixel = model.h * model.w
