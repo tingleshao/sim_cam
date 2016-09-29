@@ -53,8 +53,8 @@ import argparse
 def run(args):
     # call dispather, get model
     # use motion_generator, get motion
-    # use motion, model, param, generates simulation
-    # display simulation
+    # use motion, model, param, generates simulation result
+    # display simulation result
     # save motion and simulation result
     # step 1: call dispather,
     bandwidth = args.w
