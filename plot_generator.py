@@ -11,6 +11,8 @@ from matplotlib.collections import PatchCollection
 import Image
 import ImageDraw
 
+from matplotlib.patches import Rectangle
+
 from motion import motion
 
 class plot_generator:
@@ -24,19 +26,31 @@ class plot_generator:
         # we can see the time transition
         data = plot_generator.get_data()
         print data
-        img = Image.fromarray(data) # TODO: later change here to be based on the first frame
+        img = Image.fromarray(data) # TODO: later change here to be
+        #                               based on the first frame
         draw = ImageDraw.Draw(img)
 
+        currentAxis = plt.gca()
+        currentAxis.add_patch(Rectangle((0.4, 0.4), 0.2, 0.2,
+                                         alpha=1, facecolor='none'))
         for i in xrange(len(motion)):
         #    plot_single_motion(motion[i], i, len(motion))
             m = motion[i]
             w = m.down_pt[0] - m.start_pt[0]
             h = m.down_pt[1] - m.start_pt[1]
             rect = plot_generator.get_rect(m.start_pt[0], m.start_pt[1], w, h, 0)
-            draw.polygon([tuple(p) for p in rect], fill = 0)
+            print m.start_pt[0]/100.0
+            print m.start_pt[1]/100.0
+            print w/100.0
+            print h/100.0
+            currentAxis.add_patch(Rectangle((m.start_pt[0]/100.0,
+                                             m.start_pt[1]/100.0),
+                                             w/100.0, h/100.0,
+                                             alpha=1, facecolor='none'))
+            #draw.polygon([tuple(p) for p in rect], fill = 0)
 
-        new_data = np.asarray(img)
-        plt.imshow(new_data, cmap=plt.cm.gray)
+    #    new_data = np.asarray(img)
+    #    plt.imshow(new_data, cmap=plt.cm.gray)
         plt.show()
 
         return None
@@ -104,9 +118,9 @@ class plot_generator:
 
     @staticmethod
     def test_plot_motion():
-        m0 = motion(0, (120, 80), (160, 130))
-        m1 = motion(0, (100, 80), (160, 130))
-        m2 = motion(0, (400, 80), (500, 130))
+        m0 = motion(0, (20, 80), (16, 13))
+        m1 = motion(0, (10, 80), (16, 13))
+        m2 = motion(0, (40, 80), (50, 13))
         motion_lst = [m0, m1, m2]
         plot_generator.plot_motion(motion_lst)
 
