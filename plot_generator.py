@@ -8,6 +8,10 @@ import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
 from matplotlib.collections import PatchCollection
 
+import Image
+import ImageDraw
+
+from motion import motion
 
 class plot_generator:
 
@@ -15,9 +19,26 @@ class plot_generator:
         print "you don't have to call me since I am a toolbox. "
 
     @staticmethod
-    def plot_motion():
+    def plot_motion(motion):
         # put the view boxs (over time) above the scene, use a color mapping so
         # we can see the time transition
+        data = plot_generator.get_data()
+        print data
+        img = Image.fromarray(data) # TODO: later change here to be based on the first frame
+        draw = ImageDraw.Draw(img)
+
+        for i in xrange(len(motion)):
+        #    plot_single_motion(motion[i], i, len(motion))
+            m = motion[i]
+            w = m.down_pt[0] - m.start_pt[0]
+            h = m.down_pt[1] - m.start_pt[1]
+            rect = plot_generator.get_rect(m.start_pt[0], m.start_pt[1], w, h, 0)
+            draw.polygon([tuple(p) for p in rect], fill = 0)
+
+        new_data = np.asarray(img)
+        plt.imshow(new_data, cmap=plt.cm.gray)
+        plt.show()
+
         return None
 
     @staticmethod
@@ -25,6 +46,39 @@ class plot_generator:
         # label function
         y = xy[1] - 0.15
         plt.text(xy[0], y, text, ha="center", family='sans-serif', size=14)
+
+    @staticmethod
+    def plot_single_motion(m, t, t_scale):
+        # plot single motion (a rectangle)
+        grid = np.mgrid[0.2:0.8:3j, 0.2:0.8:3j].reshape(2, -1).T
+        patches = []
+        rect = mpatches.Rectangle(grid[1]-[])
+        patches.append(rect)
+        colors = np.linspace(0, 1, len(patches))
+
+        plt.subplots_adjust(left=0, right=1, bottom=0, top=1)
+        plt.axis('equal')
+        plt.axis('off')
+        plt.show()
+
+    @staticmethod
+    def get_rect(x, y, width, height, angle):
+        rect = np.array([(0, 0), (width, 0), (width, height), (0, height), (0, 0)])
+        theta = (np.pi / 180.0) * angle
+        R = np.array([[np.cos(theta), -np.sin(theta)],
+                      [np.sin(theta), np.cos(theta)]])
+        offset = np.array([x, y])
+        transformed_rect = np.dot(rect, R) + offset
+        return transformed_rect
+
+    @staticmethod
+    def get_data():
+        """Make an array for the demonstration."""
+        X, Y = np.meshgrid(np.linspace(0, np.pi, 512), np.linspace(0, 2, 512))
+        z = (np.sin(X) + np.cos(Y)) ** 2 + 0.25
+        data = (255 * (z / z.max())).astype(int)
+        data = np.uint8(data)
+        return data
 
     @staticmethod
     def test_plot_rect():
@@ -48,5 +102,15 @@ class plot_generator:
         plt.axis('off')
         plt.show()
 
+    @staticmethod
+    def test_plot_motion():
+        m0 = motion(0, (120, 80), (160, 130))
+        m1 = motion(0, (100, 80), (160, 130))
+        m2 = motion(0, (400, 80), (500, 130))
+        motion_lst = [m0, m1, m2]
+        plot_generator.plot_motion(motion_lst)
+
+
 if __name__ == '__main__':
-    plot_generator.test_plot_rect()
+    #plot_generator.test_plot_rect()
+    plot_generator.test_plot_motion()

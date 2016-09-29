@@ -1,5 +1,6 @@
 # This is the test for the simulation program
 import main as main
+import sys
 
 
 def test(test_number):
@@ -24,5 +25,6 @@ def test(test_number):
         main.run()
 
 if __name__ == '__main__':
-    test_number = int(argv[1])
-    test(test_number)
+    if len(sys.argv) > 1:
+        test_number = int(sys.argv[1])
+        test(test_number)

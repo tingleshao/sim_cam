@@ -16,3 +16,12 @@ class motion:
         return """This is someone's view rectangle at timestamp %d, with start
 print (%d, %d), and lower right corner (%d, %d)""" % (self.timestamp,
 self.start_pt[0], self.start_pt[1], self.down_pt[0], self.down_pt[1])
+
+
+def test():
+    m0 = motion(0, (0, 0), (100, 100))
+    print str(m0)
+
+
+if __name__ == '__main__':
+    test()
