@@ -124,6 +124,8 @@ class plot_generator:
         motion_lst = [m0, m1, m2]
         plot_generator.plot_motion(motion_lst)
 
+    
+
 
 if __name__ == '__main__':
     #plot_generator.test_plot_rect()
