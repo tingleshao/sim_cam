@@ -21,7 +21,7 @@ class plot_generator:
         print "you don't have to call me since I am a toolbox. "
 
     @staticmethod
-    def plot_motion(motion):
+    def plot_motion(motion, model):
         # put the view boxs (over time) above the scene, use a color mapping so
         # we can see the time transition
         data = plot_generator.get_data()
@@ -31,8 +31,10 @@ class plot_generator:
         draw = ImageDraw.Draw(img)
 
         currentAxis = plt.gca()
-        currentAxis.add_patch(Rectangle((0.4, 0.4), 0.2, 0.2,
-                                         alpha=1, facecolor='none'))
+        currentAxis.set_xlim([0, model.get_w()])
+        currentAxis.set_ylim([0, model.get_h()])
+#        currentAxis.add_patch(Rectangle((0.4, 0.4), 0.2, 0.2,
+#                                         alpha=1, facecolor='none'))
         for i in xrange(len(motion)):
         #    plot_single_motion(motion[i], i, len(motion))
             m = motion[i]
@@ -43,9 +45,9 @@ class plot_generator:
             print m.start_pt[1]/100.0
             print w/100.0
             print h/100.0
-            currentAxis.add_patch(Rectangle((m.start_pt[0]/100.0,
-                                             m.start_pt[1]/100.0),
-                                             w/100.0, h/100.0,
+            currentAxis.add_patch(Rectangle((m.start_pt[0],
+                                             m.start_pt[1]),
+                                             w, h,
                                              alpha=1, facecolor='none'))
             #draw.polygon([tuple(p) for p in rect], fill = 0)
 
@@ -124,7 +126,7 @@ class plot_generator:
         motion_lst = [m0, m1, m2]
         plot_generator.plot_motion(motion_lst)
 
-    
+
 
 
 if __name__ == '__main__':
