@@ -119,8 +119,8 @@ class plot_generator:
     @staticmethod
     def test_plot_motion():
         m0 = motion(0, (20, 80), (16, 13))
-        m1 = motion(0, (10, 80), (16, 13))
-        m2 = motion(0, (40, 80), (50, 13))
+        m1 = motion(1, (10, 80), (16, 13))
+        m2 = motion(2, (40, 80), (50, 13))
         motion_lst = [m0, m1, m2]
         plot_generator.plot_motion(motion_lst)
 

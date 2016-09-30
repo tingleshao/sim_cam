@@ -22,6 +22,5 @@ def test():
     m0 = motion(0, (0, 0), (100, 100))
     print str(m0)
 
-
 if __name__ == '__main__':
     test()
