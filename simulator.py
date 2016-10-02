@@ -50,18 +50,33 @@ class simulator:
             for i in xrange(time_length):
                 curr_t += 1
                 curr_view = motion[i]
-                tiles = get_tile(curr_view)
+                tiles = get_tiles(curr_view)
                 total_pixel = get_transmitted_pixels(tiles)
-                actual_pixel = get_actual_pixel(curr_view)
+                actual_pixel = get_actual_pixels(curr_view)
                 print "total_pixel: " + str(total_pixel)
                 print "actual_pixel: " + str(actual_pixel)
                 curr_overhead += total_pixel - actual_pixel
                 h_over_time.append(curr_overhead)
                 d_over_time.append(0)
             # TODO: implement a get_tile() function
-            # TODO: implement a get_actual_pixel function 
+            # TODO: implement a get_actual_pixel() function
 
         return h_over_time, d_over_time
+
+    @staticmethod
+    def get_tiles(curr_view):
+        tiles = []
+        return tiles
+
+    @staticmethod
+    def get_transmitted_pixels(tiles):
+        pixels = 0
+        return pixels
+
+    @staticmethod
+    def get_actual_pixels(curr_view):
+        pixels = 0
+        retrurn pixels
 
     def xxx():
         return "xxx"
