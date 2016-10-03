@@ -33,6 +33,9 @@ class plot_generator:
         currentAxis = plt.gca()
         currentAxis.set_xlim([0, model.get_w()])
         currentAxis.set_ylim([0, model.get_h()])
+
+#        currentAxis.set_xlim([0, 100])
+    #    currentAxis.set_ylim([0, 100])
 #        currentAxis.add_patch(Rectangle((0.4, 0.4), 0.2, 0.2,
 #                                         alpha=1, facecolor='none'))
         for i in xrange(len(motion)):
