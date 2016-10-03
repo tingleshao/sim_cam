@@ -3,6 +3,7 @@
 #  try to make it as static as possible
 from model import model
 from motion import motion
+from tile import tile
 
 
 class simulator:
@@ -50,25 +51,29 @@ class simulator:
             transmitted_windows_map = {}
 
             for i in xrange(time_length):
+                curr_overhead = 0
                 curr_view = motion[i]
-                tiles = get_tiles(curr_view, model)
+                tiles = simulator.get_tiles(curr_view, model)
                 # update the transmitted_windows_map
                 transmitted_tiles = []
+                print "tiles: " + str(tiles)
                 for tile in tiles:
-                    if tile.id not in transmitted_windows_map.keys():
-                         transmitted_windows_map.append(tile.id, trunk_size)
+                    if tile.get_id() not in transmitted_windows_map.keys():
+                         transmitted_windows_map[tile.get_id()] = trunk_size
                          transmitted_tiles.append(tile)
+                         print transmitted_windows_map
                 # reduce life time for all tiles
                 for tile_id in transmitted_windows_map.keys():
                     if transmitted_windows_map[tile_id] == 1:
                         transmitted_windows_map.pop(tile_id, None)
                     else:
                         transmitted_windows_map[tile_id] = transmitted_windows_map[tile_id] - 1
-                total_pixel = get_transmitted_pixels(transmitted_tiles)
+
+                total_pixel = simulator.get_transmitted_pixels(transmitted_tiles, trunk_size, model.get_w(), model.get_h())
                 actual_pixel = curr_view.get_pixels()
                 print "total_pixel: " + str(total_pixel)
                 print "actual_pixel: " + str(actual_pixel)
-                curr_overhead += total_pixel - actual_pixel
+                curr_overhead += (total_pixel - actual_pixel)
                 h_over_time.append(curr_overhead)
                 d_over_time.append(0)
         return h_over_time, d_over_time
@@ -77,11 +82,12 @@ class simulator:
     def get_tiles(curr_view, model):
         model_w = model.get_w()
         model_h = model.get_h()
-        # for now assume two tiles  TODO: change this later
-        # determine which level we are in
-        # assume the current view has the same w-h ratio as the model (could not be true!, then the model has to specify a tile size)
+        # for now assume two tiles  TODO:  same w-h ratio as the model (could not be true!, then the model has to specify a tile size)
         tiles = []
-        if curr_view.get_w() < model_w:
+        if curr_view.get_w() < model_w/2:
+            print "ws:"
+            print curr_view.get_w()
+            print model_w
             level = 1
         else:
             level = 0
@@ -91,43 +97,76 @@ class simulator:
             level1_tile_h = model_h / 4
             for x in xrange(4):
                 for y in xrange(4):
+                    print "here"
                     curr_tile_upper_left = [level1_tile_w * x, level1_tile_h * y]
                     curr_tile_lower_right = [curr_tile_upper_left[0] + level1_tile_w, curr_tile_upper_left[1] + level1_tile_h]
-                    if are_rects_overlap(curr_tile_upper_left, curr_tile_lower_right, curr_view.get_start_pt(), curr_view.get_down_pt()):
+                    if simulator.are_rects_overlap(curr_tile_upper_left, curr_tile_lower_right, curr_view.get_start_pt(), curr_view.get_down_pt()):
                         tiles.append(tile(4+4*y+x))
         elif level == 1:
             level1_tile_w = model_w / 4
             level1_tile_h = model_h / 4
             for x in xrange(4):
                 for y in xrange(4):
+                    print "here2"
                     # see if this tile has any overlapping with the curr_view
                     curr_tile_upper_left = [level1_tile_w * x, level1_tile_h * y]
                     curr_tile_lower_right = [curr_tile_upper_left[0] + level1_tile_w, curr_tile_upper_left[1] + level1_tile_h]
-                    if are_rects_overlap(curr_tile_upper_left, curr_tile_lower_right, curr_view.get_start_pt(), curr_view.get_down_pt()):
+                    print "four pts:"
+                    print curr_tile_upper_left
+                    print curr_tile_lower_right
+                    print curr_view.get_start_pt(), curr_view.get_down_pt()
+                    if simulator.are_rects_overlap(curr_tile_upper_left, curr_tile_lower_right, curr_view.get_start_pt(), curr_view.get_down_pt()):
+                        print "yeah"
                         tiles.append(tile(4+4*y+x))
+                    else:
+                        print "no"
             # depends on the x, y, also allocate the tiles on level 0
             level0_tile_w = model_w / 2
             level0_tile_h = model_h / 2
             for x in xrange(2):
                 for y in xrange(2):
-                    curr_tile_upper_left = [level0_tile_w * x, level1_tile_h * y]
+                    curr_tile_upper_left = [level0_tile_w * x, level0_tile_h * y]
                     curr_tile_lower_right = [curr_tile_upper_left[0] + level0_tile_w, curr_tile_upper_left[1] + level0_tile_h]
-                    if are_rects_overlap(curr_tile_upper_left, curr_tile_lower_right, curr_view.get_start_pt(), curr_view.get_down_pt()):
+                    print "four pts:"
+                    print curr_tile_upper_left
+                    print curr_tile_lower_right
+                    print curr_view.get_start_pt(), curr_view.get_down_pt()
+
+                    if simulator.are_rects_overlap(curr_tile_upper_left, curr_tile_lower_right, curr_view.get_start_pt(), curr_view.get_down_pt()):
                         tiles.append(tile(2*y+x))
+                        print "yeah2"
+                    else:
+                        print "no2"
         return tiles
 
     @staticmethod
     def are_rects_overlap(l1, r1, l2, r2):
-        if (l1[0] > r2[0] or l2[0] > r1[0]):
+        true_l1 = [l1[0], r1[1]]
+        true_r1 = [r1[0], l1[1]]
+        true_l2 = [l2[0], r2[1]]
+        true_r2 = [r2[0], l2[1]]
+        if (true_l1[0] > true_r2[0] or true_l2[0] > true_r1[0]):
             return False
-        if (l1[1] < r2[1] or l2[1] < r1[1]):
+        if (true_l1[1] < true_r2[1] or true_l2[1] < true_r1[1]):
             return False
         return True
 
     @staticmethod
-    def get_transmitted_pixels(tiles):
-        pixels = 0
-        return pixels
+    def get_transmitted_pixels(tiles, trunk_size, model_w ,model_h):
+        #  if condition on levels
+        level0_w = model_w / 2
+        level0_h = model_h / 2
+        level1_w = level0_w / 2
+        level1_h = level0_h / 2
+        total_pixels = 0
+
+        print tiles
+        for tile in tiles:
+            if tile.get_id() < 4: #level0
+                total_pixels += level0_w * level0_h
+            elif tile.get_id() < 20:
+                total_pixels += level1_w * level1_h
+        return total_pixels
 
     def xxx():
         return "xxx"

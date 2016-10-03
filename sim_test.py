@@ -54,7 +54,7 @@ def test(test_number):
         motions = [m0, m1, m2, m3]
         plot_generator.plot_motion(motions, model3)
 
-        args = {"header": 10, "trunk_size": 5}
+        args = {"header": 10, "trunk_size": 2}
         h_over_time, d_over_time = simulator.simulate(model3, motions, args)
 
         print "h_over_time: " + str(h_over_time)
