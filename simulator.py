@@ -97,7 +97,6 @@ class simulator:
             level1_tile_h = model_h / 4
             for x in xrange(4):
                 for y in xrange(4):
-                    print "here"
                     curr_tile_upper_left = [level1_tile_w * x, level1_tile_h * y]
                     curr_tile_lower_right = [curr_tile_upper_left[0] + level1_tile_w, curr_tile_upper_left[1] + level1_tile_h]
                     if simulator.are_rects_overlap(curr_tile_upper_left, curr_tile_lower_right, curr_view.get_start_pt(), curr_view.get_down_pt()):
@@ -107,19 +106,12 @@ class simulator:
             level1_tile_h = model_h / 4
             for x in xrange(4):
                 for y in xrange(4):
-                    print "here2"
                     # see if this tile has any overlapping with the curr_view
                     curr_tile_upper_left = [level1_tile_w * x, level1_tile_h * y]
                     curr_tile_lower_right = [curr_tile_upper_left[0] + level1_tile_w, curr_tile_upper_left[1] + level1_tile_h]
-                    print "four pts:"
-                    print curr_tile_upper_left
-                    print curr_tile_lower_right
-                    print curr_view.get_start_pt(), curr_view.get_down_pt()
                     if simulator.are_rects_overlap(curr_tile_upper_left, curr_tile_lower_right, curr_view.get_start_pt(), curr_view.get_down_pt()):
-                        print "yeah"
                         tiles.append(tile(4+4*y+x))
                     else:
-                        print "no"
             # depends on the x, y, also allocate the tiles on level 0
             level0_tile_w = model_w / 2
             level0_tile_h = model_h / 2
@@ -127,16 +119,8 @@ class simulator:
                 for y in xrange(2):
                     curr_tile_upper_left = [level0_tile_w * x, level0_tile_h * y]
                     curr_tile_lower_right = [curr_tile_upper_left[0] + level0_tile_w, curr_tile_upper_left[1] + level0_tile_h]
-                    print "four pts:"
-                    print curr_tile_upper_left
-                    print curr_tile_lower_right
-                    print curr_view.get_start_pt(), curr_view.get_down_pt()
-
                     if simulator.are_rects_overlap(curr_tile_upper_left, curr_tile_lower_right, curr_view.get_start_pt(), curr_view.get_down_pt()):
                         tiles.append(tile(2*y+x))
-                        print "yeah2"
-                    else:
-                        print "no2"
         return tiles
 
     @staticmethod
