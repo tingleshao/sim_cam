@@ -76,6 +76,11 @@ class simulator:
                 curr_overhead += simulator.compute_ratio_overhead(total_pixel, actual_pixel)
                 h_over_time.append(curr_overhead)
                 d_over_time.append(0)
+
+  # TODO: can we put the strategy into a JSON?
+  # TODO: implement the "keep receving data" model
+            elif model.get_name() == 'model4':
+                "print: implement me!"
         return h_over_time, d_over_time
 
 
