@@ -3,6 +3,8 @@
 import matplotlib.pyplot as plt
 plt.rcdefaults()
 import numpy as np
+import matplotlib
+from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 import matplotlib.path as mpath
 import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
@@ -38,6 +40,8 @@ class plot_generator:
     #    currentAxis.set_ylim([0, 100])
 #        currentAxis.add_patch(Rectangle((0.4, 0.4), 0.2, 0.2,
 #                                         alpha=1, facecolor='none'))
+        color_lst = plot_generator.generate_color_spectrum(range(len(motion)))
+
         for i in xrange(len(motion)):
         #    plot_single_motion(motion[i], i, len(motion))
             m = motion[i]
@@ -51,14 +55,32 @@ class plot_generator:
             currentAxis.add_patch(Rectangle((m.start_pt[0],
                                              m.start_pt[1]),
                                              w, h,
-                                             alpha=1, facecolor='none'))
+                                             alpha=1, facecolor='none',
+                                             edgecolor=color_lst[i]))
             #draw.polygon([tuple(p) for p in rect], fill = 0)
 
     #    new_data = np.asarray(img)
     #    plt.imshow(new_data, cmap=plt.cm.gray)
+
+        cmap = matplotlib.colors.ListedColormap(color_lst)
+        bounds=range(len(motion)+1)
+        cax = inset_axes(currentAxis, width="4%", height='70%', loc=4)
+        cbar = matplotlib.colorbar.ColorbarBase(cax, cmap=cmap, boundaries=bounds)
+        cax.yaxis.set_ticks_position('left')
+        cbar.ax.set_yticklabels([str(i) for i in range(len(motion)+1)])
+        cax.yaxis.set_label_position('left')
+        cbar.set_label('time stamp')
         plt.show()
 
         return None
+
+    @staticmethod
+    def generate_color_spectrum(input_range):
+        range_max = input_range[-1]
+        color_spec = [i * 255 / range_max for i in input_range]
+        print str(['%0.2X' % i for i in color_spec])
+        color_str = ['#'+x+'ef39' for x in ['%0.2X' % i for i in color_spec]]
+        return color_str
 
     @staticmethod
     def label(xy, text):

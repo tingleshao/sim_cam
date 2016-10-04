@@ -4,7 +4,7 @@
 from model import model
 from motion import motion
 from tile import tile
-
+from logger import logger
 
 class simulator:
 
@@ -34,7 +34,7 @@ class simulator:
                     curr_overhead += header_size
                     print "total_pixel: " + str(total_pixel)
                     print "actual_pixel: " + str((motion[i].down_pt[0] - motion[i].start_pt[0]) * (motion[i].down_pt[1] - motion[i].start_pt[1]))
-                curr_overhead += total_pixel - (motion[i].down_pt[0] - motion[i].start_pt[0]) * (motion[i].down_pt[1] - motion[i].start_pt[1])
+                curr_overhead += simulator.compute_ratio_overhead(total_pixel, (motion[i].down_pt[0] - motion[i].start_pt[0]) * (motion[i].down_pt[1] - motion[i].start_pt[1]))
                 h_over_time.append(curr_overhead)
                 d_over_time.append(0)
 
@@ -73,10 +73,19 @@ class simulator:
                 actual_pixel = curr_view.get_pixels()
                 print "total_pixel: " + str(total_pixel)
                 print "actual_pixel: " + str(actual_pixel)
-                curr_overhead += (total_pixel - actual_pixel)
+                curr_overhead += simulator.compute_ratio_overhead(total_pixel, actual_pixel)
                 h_over_time.append(curr_overhead)
                 d_over_time.append(0)
         return h_over_time, d_over_time
+
+
+    @staticmethod
+    def compute_minus_overhead(total_pixel, actual_pixel):
+        return total_pixel - actual_pixel
+
+    @staticmethod
+    def compute_ratio_overhead(total_pixel, actual_pixel):
+        return float(total_pixel - actual_pixel) / float(actual_pixel)
 
     @staticmethod
     def get_tiles(curr_view, model):
@@ -112,6 +121,7 @@ class simulator:
                     if simulator.are_rects_overlap(curr_tile_upper_left, curr_tile_lower_right, curr_view.get_start_pt(), curr_view.get_down_pt()):
                         tiles.append(tile(4+4*y+x))
                     else:
+                        logger.debug_print("debug", "no overlapping!")
             # depends on the x, y, also allocate the tiles on level 0
             level0_tile_w = model_w / 2
             level0_tile_h = model_h / 2
