@@ -50,11 +50,11 @@ def test(test_number):
     # Trivial strategy 2
     elif test_number == 3:
         model3 = model_reader.read_model('models/model3.json')
-
-        m0 = motion(0, (1,1), (149, 149*2/3))
-        m1 = motion(1, (19,13), (19+111, 13+(111*2/3)))
-        m2 = motion(2, (56, 20), (56+65, 20+(65*2/3)))
-        m3 = motion(3, (80, 30), (80+30, 30+20))
+        print "model3 name: " + model3.get_name()
+    #    m0 = motion(0, (1,1), (149, 149*2/3))
+    #    m1 = motion(1, (19,13), (19+111, 13+(111*2/3)))
+    #    m2 = motion(2, (56, 20), (56+65, 20+(65*2/3)))
+    #    m3 = motion(3, (80, 30), (80+30, 30+20))
 
         #motions = [m0, m1, m2, m3]
         motions = model_reader.read_motions('models/model3.json')

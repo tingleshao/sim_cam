@@ -21,6 +21,7 @@ class simulator:
         h_over_time = []
         d_over_time = []
         if model.get_name() == 'model0':
+            print "simulating model0 !"
             time_length = len(motion)
             total_pixel = model.h * model.w
             header_size = args.get("header")
@@ -39,8 +40,8 @@ class simulator:
                 d_over_time.append(0)
 
         elif model.get_name() == 'model3':
-            curr_bdwh = 10000
-            ahead_limit = 2
+            print "simulating model0 !"
+
             # model3: 2 layers, only transmit the required tiles in any level, also transmit related tiles in the other level
             time_length = len(motion)
             total_pixel = 1
@@ -71,6 +72,7 @@ class simulator:
                     else:
                         transmitted_windows_map[tile_id] = transmitted_windows_map[tile_id] - 1
 
+                total_pixel = simulator.get_transmitted_pixels(transmitted_tiles, trunk_size, model.get_w(), model.get_h())
                 actual_pixel = curr_view.get_pixels() # actual number of pixels get displayed
                 print "total_pixel: " + str(total_pixel)
                 print "actual_pixel: " + str(actual_pixel)
@@ -80,6 +82,8 @@ class simulator:
 
         elif model.get_name() == 'model4':
             # XXX: I am doing this for the aggressive transmission ( the most common one )
+            curr_bdwh = 10000
+            ahead_limit = 2
             time_length = len(motion)
             total_pixel = 1
             header_size = args.get("header")
