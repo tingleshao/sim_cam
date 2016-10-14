@@ -39,6 +39,8 @@ class simulator:
                 d_over_time.append(0)
 
         elif model.get_name() == 'model3':
+            curr_bdwh = 10000
+            ahead_limit = 2
             # model3: 2 layers, only transmit the required tiles in any level, also transmit related tiles in the other level
             time_length = len(motion)
             total_pixel = 1
@@ -69,8 +71,40 @@ class simulator:
                     else:
                         transmitted_windows_map[tile_id] = transmitted_windows_map[tile_id] - 1
 
+                actual_pixel = curr_view.get_pixels() # actual number of pixels get displayed
+                print "total_pixel: " + str(total_pixel)
+                print "actual_pixel: " + str(actual_pixel)
+                curr_overhead += simulator.compute_ratio_overhead(total_pixel, actual_pixel)
+                h_over_time.append(curr_overhead)
+                d_over_time.append(0)
+
+        elif model.get_name() == 'model4':
+            # XXX: I am doing this for the aggressive transmission ( the most common one )
+            time_length = len(motion)
+            total_pixel = 1
+            header_size = args.get("header")
+            trunk_size = args.set("trunk_size")
+            transmitted_windows_map = {}
+            for i in xrange(time_length):
+                curr_overhead = 0
+                curr_view = motion[i]
+                tiles = simulator.get_tiles(curr_view, model)
+                transmitted_tiles = []
+                print "tiles: " + str(tiles)
+                for tile in tiles:
+                    if tile.get(id) not in transmitted_windows_map.keys():
+                        transmitted_windows_map[tile.get_id()] = trunk_size
+                        transmitted_tiles.append(tile)
+                        print transmitted_windows_map
+                for tile_id in transmitted_windows_map.keys():
+                    if transmitted_windows_map[tile_id] == 1:
+                        transmitted_windows_map.pop(tile_id, None)
+                    else:
+                        transmitted_windows_map[tile_id] = transmitted_windows_map[tile_id] - 1
+
                 total_pixel = simulator.get_transmitted_pixels(transmitted_tiles, trunk_size, model.get_w(), model.get_h())
-                actual_pixel = curr_view.get_pixels()
+                curr_bdwh, total_pixel = comsume_remaining_bandwidth(curr_bdwh, total_pixel, transmitted_windows_map, transmitted_tiles)
+                actual_pixel = curr_view.get_pixels() # actual number of pixels get displayed
                 print "total_pixel: " + str(total_pixel)
                 print "actual_pixel: " + str(actual_pixel)
                 curr_overhead += simulator.compute_ratio_overhead(total_pixel, actual_pixel)
@@ -78,9 +112,6 @@ class simulator:
                 d_over_time.append(0)
 
   # TODO: can we put the strategy into a JSON?
-  # TODO: implement the "keep receving data" model
-            elif model.get_name() == 'model4':
-                "print: implement me!"
         return h_over_time, d_over_time
 
 
