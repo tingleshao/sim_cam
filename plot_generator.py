@@ -10,8 +10,10 @@ import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
 from matplotlib.collections import PatchCollection
 
-import Image
-import ImageDraw
+from PIL import  Image
+from PIL import  ImageDraw
+#import Image
+#import ImageDraw
 
 from matplotlib.patches import Rectangle
 
