@@ -9,6 +9,9 @@ import matplotlib.path as mpath
 import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
 from matplotlib.collections import PatchCollection
+from mpl_toolkits.mplot3d import Axes3D
+from operator import add
+
 
 from PIL import Image
 from PIL import ImageDraw
@@ -140,9 +143,76 @@ class plot_generator:
         motion_lst = [m0, m1, m2]
         plot_generator.plot_motion(motion_lst)
 
+    @staticmethod
+    def plot_history(history):
+    # plot the history using 3D cubes
+        for h in history:
+            plot_cube(h)
+
+    @staticmethod
+    def plot_cube(i_s):
+        # for a cube, needs to have the 8 points
+        point_base = np.array([[0, 0, 0],
+                           [1, 0, 0],
+                           [1, 1, 0],
+                           [0, 1, 0],
+                           [0, 0, 1],
+                           [1, 0, 1],
+                           [1, 1, 1],
+                           [0, 1, 1]])
+        shifts = [[0, 0, 0], [1, 0, 0], [0, 0, -1], [1, 0, -1]]
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        for i in i_s:
+            if i == 0:
+                r = [0, 1]
+            elif i == 1:
+                r = [1, 2]
+            elif i == 2:
+                r = [0, 1]
+            if i == 0:
+                X, Y = np.meshgrid([0, 1], [0, 1])
+            if i == 1:
+                X, Y = np.meshgrid([1, 2], [0, 1])
+            if i == 2:
+                X, Y = np.meshgrid([0, 1], [0, 1])
+            print "X: " + str(X)
+            print "Y: " + str(Y)
+            if i == 0:
+                ax.plot_surface(X, Y, 1, alpha=0.5)
+                ax.plot_surface(X, Y, 0, alpha=0.5)
+                ax.plot_surface(X, 0, Y, alpha=0.5)
+                ax.plot_surface(X, 1, Y, alpha=0.5)
+                ax.plot_surface(0, X, Y, alpha=0.5)
+                ax.plot_surface(1, X, Y, alpha=0.5)
+            elif i == 1:
+                ax.plot_surface(X, Y, 1, alpha=0.1)
+                ax.plot_surface(X, Y, 0, alpha=0.2)
+                ax.plot_surface(X, 0, Y, alpha=0.3)
+                ax.plot_surface(X, 1, Y, alpha=0.4)
+                ax.plot_surface(2, [[0, 1],[0, 1]], Y, alpha=0.5)
+                ax.plot_surface(1, [[0, 1],[0, 1]], Y, alpha=0.6)
+            elif i == 2:
+                ax.plot_surface(X, Y, 0, alpha=0.5)
+                ax.plot_surface(X, Y, -1, alpha=0.5)
+                ax.plot_surface(X, 0, [[-1, -1],[0, 0]], alpha=0.5)
+                ax.plot_surface(X, 1, [[-1, -1],[0, 0]], alpha=0.5)
+                ax.plot_surface(1, X, [[-1, -1],[0, 0]], alpha=0.5)
+                ax.plot_surface(0, X, [[-1, -1],[0, 0]], alpha=0.5)
+            points = np.array([map(add, p, shifts[i])  for p in point_base])
+            print points
+            ax.scatter3D(points[:,0], points[:,1], points[:,2])
+
+        ax.set_xlabel('X')
+        ax.set_ylabel('Y')
+        ax.set_zlabel('Z')
+    #    plt.axis('equal')
+        plt.show()
+
 
 
 
 if __name__ == '__main__':
     #plot_generator.test_plot_rect()
-    plot_generator.test_plot_motion()
+    #plot_generator.test_plot_motion()
+    plot_generator.plot_cube([0, 1, 2])
