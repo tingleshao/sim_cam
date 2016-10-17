@@ -51,7 +51,7 @@ class simulator:
                 h_over_time.append(curr_overhead)
                 d_over_time.append(0)
                 curr_history = []
-                for i = xrange(20):
+                for i in xrange(20):
                     curr_history.append([i, 1])
                 history_lst.append(curr_history)
 

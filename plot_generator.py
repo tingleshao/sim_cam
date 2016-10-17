@@ -2,23 +2,20 @@
  #   plotting stuff and it does not maintain a state.
 import matplotlib.pyplot as plt
 plt.rcdefaults()
-import numpy as np
 import matplotlib
-from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 import matplotlib.path as mpath
 import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
+import numpy as np
+
 from matplotlib.collections import PatchCollection
+from matplotlib.patches import Rectangle
+from motion import motion
+from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 from mpl_toolkits.mplot3d import Axes3D
 from operator import add
-
-
 from PIL import Image
 from PIL import ImageDraw
-
-from matplotlib.patches import Rectangle
-
-from motion import motion
 
 class plot_generator:
 
@@ -55,13 +52,13 @@ class plot_generator:
                                              w, h,
                                              alpha=1, facecolor='none',
                                              edgecolor=color_lst[i]))
-
+        # TODO: here has some strange stupid stuff going on 
         cmap = matplotlib.colors.ListedColormap(color_lst)
         bounds=range(len(motion)+1)
         cax = inset_axes(currentAxis, width="8%", height='70%', loc=4)
         cbar = matplotlib.colorbar.ColorbarBase(cax, cmap=cmap, boundaries=bounds)
         cax.yaxis.set_ticks_position('left')
-        cbar.ax.set_yticklabels([str(i) for i in range(len)])
+    #    cbar.ax.set_yticklabels([str(i) for i in range(len)])
         cax.yaxis.set_label_position('left')
         cbar.set_label('Income (,000s)')
         plt.show()
@@ -206,10 +203,7 @@ class plot_generator:
         ax.set_xlabel('X')
         ax.set_ylabel('Y')
         ax.set_zlabel('Z')
-    #    plt.axis('equal')
         plt.show()
-
-
 
 
 if __name__ == '__main__':

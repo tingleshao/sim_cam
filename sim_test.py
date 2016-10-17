@@ -56,18 +56,18 @@ def test(test_number):
         plot_generator.plot_motion(motions, model3)
 
         args = {"header": 10, "trunk_size": 2}
-        h_over_time, d_over_time = simulator.simulate(model3, motions, args)
+        h_over_time, d_over_time, his = simulator.simulate(model3, motions, args)
 
         print "h_over_time: " + str(h_over_time)
         print "d_over_time: " + str(d_over_time)
 
         plt.plot(h_over_time, 'bo-')
         plt.show()
-        
+
     elif test_number == 4:
         model4 = model_reader.read_model('models/model4.json')
         print "model4 name: " + model4.get_name()
-        
+
         motions = model_reader.read_motions('models/model4.json')
         plot_generator.plot_motion(motions, model4)
 
@@ -76,9 +76,9 @@ def test(test_number):
 
         print "h_over_time: " + str(h_over_time)
         print "d_over_time: " + str(d_over_time)
-  
+
         plt.plot(h_over_time, 'bo-')
-        plt.show() 
+        plt.show()
 
 if __name__ == '__main__':
     if len(sys.argv) > 1:
