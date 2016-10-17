@@ -64,12 +64,12 @@ class plot_generator:
 
         cmap = matplotlib.colors.ListedColormap(color_lst)
         bounds=range(len(motion)+1)
-        cax = inset_axes(currentAxis, width="4%", height='70%', loc=4)
+        cax = inset_axes(currentAxis, width="8%", height='70%', loc=4)
         cbar = matplotlib.colorbar.ColorbarBase(cax, cmap=cmap, boundaries=bounds)
         cax.yaxis.set_ticks_position('left')
-        cbar.ax.set_yticklabels([str(i) for i in range(len(motion)+1)])
+        cbar.ax.set_yticklabels([str(i) for i in range(len)])
         cax.yaxis.set_label_position('left')
-        cbar.set_label('time stamp')
+        cbar.set_label('Income (,000s)')
         plt.show()
 
         return None
