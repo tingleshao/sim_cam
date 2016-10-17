@@ -4,9 +4,9 @@
 
 # Definitions:
 # Motion -> View
-# Motions -> List of Views 
+# Motions -> List of Views
 # Model -> Strategy
-# args: -> system status 
+# args: -> system status
 
 
 from model import model
@@ -19,6 +19,7 @@ class simulator:
     def __init__(self):
         print "you just initialized a simulator!"
 
+
     # TODO: change the h number to be the ration (p0-p1) / p0 ...
     @staticmethod
     def simulate(model, motion, args):
@@ -28,8 +29,11 @@ class simulator:
         # args: other parameters
         h_over_time = []
         d_over_time = []
+        # history format:
+        # at current time point, which set of tiles hase been transmitted (with lifetime)
+        history_lst = []
+        print "simulating " + model.get_name()
         if model.get_name() == 'model0':
-            print "simulating model0 !"
             time_length = len(motion)
             total_pixel = model.h * model.w
             header_size = args.get("header")
@@ -46,9 +50,12 @@ class simulator:
                 curr_overhead += simulator.compute_ratio_overhead(total_pixel, (motion[i].down_pt[0] - motion[i].start_pt[0]) * (motion[i].down_pt[1] - motion[i].start_pt[1]))
                 h_over_time.append(curr_overhead)
                 d_over_time.append(0)
+                curr_history = []
+                for i = xrange(20):
+                    curr_history.append([i, 1])
+                history_lst.append(curr_history)
 
         elif model.get_name() == 'model3':
-            print "simulating model3 !"
             # model3: 2 layers, only transmit the required tiles in any level, also transmit related tiles in the other level
             time_length = len(motion)
             total_pixel = 1
@@ -59,7 +66,6 @@ class simulator:
             # so that at any time point
             #   we can predict if we need to transmit the tile or not
             transmitted_windows_map = {}
-
             for i in xrange(time_length):
                 curr_overhead = 0
                 curr_view = motion[i]
@@ -69,7 +75,7 @@ class simulator:
                 print "tiles: " + str(tiles)
                 for tile in tiles:
                     # if current storage does not have this tile, transmit it
-                    if tile.get_id() not in transmitted_windows_map.keys(): 
+                    if tile.get_id() not in transmitted_windows_map.keys():
                          transmitted_windows_map[tile.get_id()] = trunk_size
                          transmitted_tiles.append(tile)
                          print transmitted_windows_map
@@ -79,7 +85,10 @@ class simulator:
                         transmitted_windows_map.pop(tile_id, None)
                     else:
                         transmitted_windows_map[tile_id] = transmitted_windows_map[tile_id] - 1
-
+                curr_history = []
+                for t in set(transmitted_windows_map):
+                    curr_history.append([t, transmitted_windows_map[t]])
+                history_lst.append(curr_history)
                 total_pixel = simulator.get_transmitted_pixels(transmitted_tiles, trunk_size, model.get_w(), model.get_h())
                 actual_pixel = curr_view.get_pixels() # actual number of pixels get displayed
                 print "total_pixel: " + str(total_pixel)
@@ -88,11 +97,10 @@ class simulator:
                 h_over_time.append(curr_overhead)
                 d_over_time.append(0)
 
+        # I am doing this for the aggressive transmission ( the most common one )
+        # the difference between this and model3 strategy is that this one enforces transmission that catches
+        # current and the next frame
         elif model.get_name() == 'model4':
-            # I am doing this for the aggressive transmission ( the most common one )
-            # the difference between this and model3 strategy is that this one enforces transmission that catches 
-            # current and the next frame 
-            print "simulating model 4!"
             curr_bdwh = 10000
             ahead_limit = 2
             time_length = len(motion)
@@ -107,20 +115,23 @@ class simulator:
                 transmitted_tiles = []
                 print "tiles: " + str(tiles)
                 for tile in tiles:
-                    # if current memory does not keep this tile for now and 1 frame later, transmit it 
-                    if tile.get_id() not in transmitted_windows_map.keys(): 
+                    # if current memory does not keep this tile for now and 1 frame later, transmit it
+                    if tile.get_id() not in transmitted_windows_map.keys():
                         transmitted_windows_map[tile.get_id()] = trunk_size
                         transmitted_tiles.append(tile)
                         print transmitted_windows_map
-                    elif transmitted_windows_map[tile.get_id()] < ahead_limit: 
-                        transmitted_windows_map[tile.get_id()] += trunk_size 
+                    elif transmitted_windows_map[tile.get_id()] < ahead_limit:
+                        transmitted_windows_map[tile.get_id()] += trunk_size
                         transmitted_tiles.append(tile)
                 for tile_id in transmitted_windows_map.keys():
                     if transmitted_windows_map[tile_id] == 1:
                         transmitted_windows_map.pop(tile_id, None)
                     else:
                         transmitted_windows_map[tile_id] = transmitted_windows_map[tile_id] - 1
-
+                    curr_history = []
+                for t in set(transmitted_windows_map):
+                    curr_history.append([t, transmitted_windows_map[t]])
+                history_lst.append(curr_history)
                 total_pixel = simulator.get_transmitted_pixels(transmitted_tiles, trunk_size, model.get_w(), model.get_h())
        #         curr_bdwh, total_pixel = comsume_remaining_bandwidth(curr_bdwh, total_pixel, transmitted_windows_map, transmitted_tiles)
                 actual_pixel = curr_view.get_pixels() # actual number of pixels get displayed
@@ -129,18 +140,19 @@ class simulator:
                 curr_overhead += simulator.compute_ratio_overhead(total_pixel, actual_pixel)
                 h_over_time.append(curr_overhead)
                 d_over_time.append(0)
-
   # TODO: can we put the strategy into a JSON?
-        return h_over_time, d_over_time
+        return h_over_time, d_over_time, history_lst
 
 
     @staticmethod
     def compute_minus_overhead(total_pixel, actual_pixel):
         return total_pixel - actual_pixel
 
+
     @staticmethod
     def compute_ratio_overhead(total_pixel, actual_pixel):
         return float(total_pixel - actual_pixel) / float(actual_pixel)
+
 
     @staticmethod
     def get_tiles(curr_view, model):
@@ -188,6 +200,7 @@ class simulator:
                         tiles.append(tile(2*y+x))
         return tiles
 
+
     @staticmethod
     def are_rects_overlap(l1, r1, l2, r2):
         true_l1 = [l1[0], r1[1]]
@@ -199,6 +212,7 @@ class simulator:
         if (true_l1[1] < true_r2[1] or true_l2[1] < true_r1[1]):
             return False
         return True
+
 
     @staticmethod
     def get_transmitted_pixels(tiles, trunk_size, model_w ,model_h):
@@ -217,8 +231,6 @@ class simulator:
                 total_pixels += level1_w * level1_h
         return total_pixels
 
-    def xxx():
-        return "xxx"
 
 def test():
     model0 = model("model0", 100, 100)
@@ -231,6 +243,7 @@ def test():
     h_over_time, d_over_time = simulator.simulate(model0, motions, args)
     print "h_over_time: " + str(h_over_time)
     print "d_over_time: " + str(d_over_time)
+
 
 if __name__ == '__main__':
     test()

@@ -10,10 +10,8 @@ import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
 from matplotlib.collections import PatchCollection
 
-from PIL import  Image
-from PIL import  ImageDraw
-#import Image
-#import ImageDraw
+from PIL import Image
+from PIL import ImageDraw
 
 from matplotlib.patches import Rectangle
 
@@ -22,7 +20,7 @@ from motion import motion
 class plot_generator:
 
     def __init__(self):
-        print "you don't have to call me since I am a toolbox. "
+        print "you just initialized a plot generator. "
 
     @staticmethod
     def plot_motion(motion, model):
@@ -38,14 +36,9 @@ class plot_generator:
         currentAxis.set_xlim([0, model.get_w()])
         currentAxis.set_ylim([0, model.get_h()])
 
-#        currentAxis.set_xlim([0, 100])
-    #    currentAxis.set_ylim([0, 100])
-#        currentAxis.add_patch(Rectangle((0.4, 0.4), 0.2, 0.2,
-#                                         alpha=1, facecolor='none'))
         color_lst = plot_generator.generate_color_spectrum(range(len(motion)))
 
         for i in xrange(len(motion)):
-        #    plot_single_motion(motion[i], i, len(motion))
             m = motion[i]
             w = m.down_pt[0] - m.start_pt[0]
             h = m.down_pt[1] - m.start_pt[1]
@@ -59,10 +52,6 @@ class plot_generator:
                                              w, h,
                                              alpha=1, facecolor='none',
                                              edgecolor=color_lst[i]))
-            #draw.polygon([tuple(p) for p in rect], fill = 0)
-
-    #    new_data = np.asarray(img)
-    #    plt.imshow(new_data, cmap=plt.cm.gray)
 
         cmap = matplotlib.colors.ListedColormap(color_lst)
         bounds=range(len(motion)+1)
@@ -98,7 +87,6 @@ class plot_generator:
         rect = mpatches.Rectangle(grid[1]-[])
         patches.append(rect)
         colors = np.linspace(0, 1, len(patches))
-
         plt.subplots_adjust(left=0, right=1, bottom=0, top=1)
         plt.axis('equal')
         plt.axis('off')
@@ -138,7 +126,6 @@ class plot_generator:
         collection = PatchCollection(patches, cmap=plt.cm.hsv, alpha=0.3)
         collection.set_array(np.array(colors))
         ax.add_collection(collection)
-#        ax.add_line(line)
 
         plt.subplots_adjust(left=0, right=1, bottom=0, top=1)
         plt.axis('equal')
