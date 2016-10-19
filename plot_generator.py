@@ -2,27 +2,25 @@
  #   plotting stuff and it does not maintain a state.
 import matplotlib.pyplot as plt
 plt.rcdefaults()
-import numpy as np
 import matplotlib
-from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 import matplotlib.path as mpath
 import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
+import numpy as np
+
 from matplotlib.collections import PatchCollection
-
-from PIL import  Image
-from PIL import  ImageDraw
-#import Image
-#import ImageDraw
-
 from matplotlib.patches import Rectangle
-
 from motion import motion
+from mpl_toolkits.axes_grid1.inset_locator import inset_axes
+from mpl_toolkits.mplot3d import Axes3D
+from operator import add
+from PIL import Image
+from PIL import ImageDraw
 
 class plot_generator:
 
     def __init__(self):
-        print "you don't have to call me since I am a toolbox. "
+        print "you just initialized a plot generator. "
 
     @staticmethod
     def plot_motion(motion, model):
@@ -38,14 +36,9 @@ class plot_generator:
         currentAxis.set_xlim([0, model.get_w()])
         currentAxis.set_ylim([0, model.get_h()])
 
-#        currentAxis.set_xlim([0, 100])
-    #    currentAxis.set_ylim([0, 100])
-#        currentAxis.add_patch(Rectangle((0.4, 0.4), 0.2, 0.2,
-#                                         alpha=1, facecolor='none'))
         color_lst = plot_generator.generate_color_spectrum(range(len(motion)))
 
         for i in xrange(len(motion)):
-        #    plot_single_motion(motion[i], i, len(motion))
             m = motion[i]
             w = m.down_pt[0] - m.start_pt[0]
             h = m.down_pt[1] - m.start_pt[1]
@@ -59,19 +52,15 @@ class plot_generator:
                                              w, h,
                                              alpha=1, facecolor='none',
                                              edgecolor=color_lst[i]))
-            #draw.polygon([tuple(p) for p in rect], fill = 0)
-
-    #    new_data = np.asarray(img)
-    #    plt.imshow(new_data, cmap=plt.cm.gray)
-
+        # TODO: here has some strange stupid stuff going on 
         cmap = matplotlib.colors.ListedColormap(color_lst)
         bounds=range(len(motion)+1)
-        cax = inset_axes(currentAxis, width="4%", height='70%', loc=4)
+        cax = inset_axes(currentAxis, width="8%", height='70%', loc=4)
         cbar = matplotlib.colorbar.ColorbarBase(cax, cmap=cmap, boundaries=bounds)
         cax.yaxis.set_ticks_position('left')
-        cbar.ax.set_yticklabels([str(i) for i in range(len(motion)+1)])
+    #    cbar.ax.set_yticklabels([str(i) for i in range(len)])
         cax.yaxis.set_label_position('left')
-        cbar.set_label('time stamp')
+        cbar.set_label('Income (,000s)')
         plt.show()
 
         return None
@@ -98,7 +87,6 @@ class plot_generator:
         rect = mpatches.Rectangle(grid[1]-[])
         patches.append(rect)
         colors = np.linspace(0, 1, len(patches))
-
         plt.subplots_adjust(left=0, right=1, bottom=0, top=1)
         plt.axis('equal')
         plt.axis('off')
@@ -138,7 +126,6 @@ class plot_generator:
         collection = PatchCollection(patches, cmap=plt.cm.hsv, alpha=0.3)
         collection.set_array(np.array(colors))
         ax.add_collection(collection)
-#        ax.add_line(line)
 
         plt.subplots_adjust(left=0, right=1, bottom=0, top=1)
         plt.axis('equal')
@@ -153,9 +140,73 @@ class plot_generator:
         motion_lst = [m0, m1, m2]
         plot_generator.plot_motion(motion_lst)
 
+    @staticmethod
+    def plot_history(history):
+    # plot the history using 3D cubes
+        for h in history:
+            plot_cube(h)
 
+    @staticmethod
+    def plot_cube(i_s):
+        # for a cube, needs to have the 8 points
+        point_base = np.array([[0, 0, 0],
+                           [1, 0, 0],
+                           [1, 1, 0],
+                           [0, 1, 0],
+                           [0, 0, 1],
+                           [1, 0, 1],
+                           [1, 1, 1],
+                           [0, 1, 1]])
+        shifts = [[0, 0, 0], [1, 0, 0], [0, 0, -1], [1, 0, -1]]
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        for i in i_s:
+            if i == 0:
+                r = [0, 1]
+            elif i == 1:
+                r = [1, 2]
+            elif i == 2:
+                r = [0, 1]
+            if i == 0:
+                X, Y = np.meshgrid([0, 1], [0, 1])
+            if i == 1:
+                X, Y = np.meshgrid([1, 2], [0, 1])
+            if i == 2:
+                X, Y = np.meshgrid([0, 1], [0, 1])
+            print "X: " + str(X)
+            print "Y: " + str(Y)
+            if i == 0:
+                ax.plot_surface(X, Y, 1, alpha=0.5)
+                ax.plot_surface(X, Y, 0, alpha=0.5)
+                ax.plot_surface(X, 0, Y, alpha=0.5)
+                ax.plot_surface(X, 1, Y, alpha=0.5)
+                ax.plot_surface(0, X, Y, alpha=0.5)
+                ax.plot_surface(1, X, Y, alpha=0.5)
+            elif i == 1:
+                ax.plot_surface(X, Y, 1, alpha=0.1)
+                ax.plot_surface(X, Y, 0, alpha=0.2)
+                ax.plot_surface(X, 0, Y, alpha=0.3)
+                ax.plot_surface(X, 1, Y, alpha=0.4)
+                ax.plot_surface(2, [[0, 1],[0, 1]], Y, alpha=0.5)
+                ax.plot_surface(1, [[0, 1],[0, 1]], Y, alpha=0.6)
+            elif i == 2:
+                ax.plot_surface(X, Y, 0, alpha=0.5)
+                ax.plot_surface(X, Y, -1, alpha=0.5)
+                ax.plot_surface(X, 0, [[-1, -1],[0, 0]], alpha=0.5)
+                ax.plot_surface(X, 1, [[-1, -1],[0, 0]], alpha=0.5)
+                ax.plot_surface(1, X, [[-1, -1],[0, 0]], alpha=0.5)
+                ax.plot_surface(0, X, [[-1, -1],[0, 0]], alpha=0.5)
+            points = np.array([map(add, p, shifts[i])  for p in point_base])
+            print points
+            ax.scatter3D(points[:,0], points[:,1], points[:,2])
+
+        ax.set_xlabel('X')
+        ax.set_ylabel('Y')
+        ax.set_zlabel('Z')
+        plt.show()
 
 
 if __name__ == '__main__':
     #plot_generator.test_plot_rect()
-    plot_generator.test_plot_motion()
+    #plot_generator.test_plot_motion()
+    plot_generator.plot_cube([0, 1, 2])
