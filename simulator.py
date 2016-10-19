@@ -28,6 +28,8 @@ class simulator:
         # args: other parameters
         h_over_time = []
         d_over_time = []
+        history_lst = [] 
+        
         if model.get_name() == 'model0':
             print "simulating model0 !"
             time_length = len(motion)
@@ -133,7 +135,6 @@ class simulator:
   # TODO: can we put the strategy into a JSON?
         return h_over_time, d_over_time
 
-
     @staticmethod
     def compute_minus_overhead(total_pixel, actual_pixel):
         return total_pixel - actual_pixel
@@ -219,6 +220,12 @@ class simulator:
 
     def xxx():
         return "xxx"
+        
+    @staticmethod
+    def get_history():
+        # supporse to return the record history
+        # history format: 
+        return None 
 
 def test():
     model0 = model("model0", 100, 100)
