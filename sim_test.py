@@ -27,7 +27,7 @@ def test(test_number):
         motions = model_reader.read_motions('models/model0.json')
         plot_generator.plot_motion(motions, model0)
         args = {"header": 10, "trunk_size": 5}
-        h_over_time, d_over_time = simulator.simulate(model0, motions, args)
+        h_over_time, d_over_time, his, tilehistory = simulator.simulate(model0, motions, args)
         print "h_over_time: " + str(h_over_time)
         print "d_over_time: " + str(d_over_time)
 
@@ -56,7 +56,7 @@ def test(test_number):
         plot_generator.plot_motion(motions, model3)
 
         args = {"header": 10, "trunk_size": 2}
-        h_over_time, d_over_time, his = simulator.simulate(model3, motions, args)
+        h_over_time, d_over_time, his, tilehistory = simulator.simulate(model3, motions, args)
 
         print "h_over_time: " + str(h_over_time)
         print "d_over_time: " + str(d_over_time)
@@ -72,13 +72,23 @@ def test(test_number):
         plot_generator.plot_motion(motions, model4)
 
         args = {"header": 10, "trunk_size": 2}
-        h_over_time, d_over_time = simulator.simulate(model4, motions, args)
+        h_over_time, d_over_time, his, tilehistory = simulator.simulate(model4, motions, args)
 
         print "h_over_time: " + str(h_over_time)
         print "d_over_time: " + str(d_over_time)
 
         plt.plot(h_over_time, 'bo-')
         plt.show()
+        firstframe_level0_tiles = filter(lambda x: x < 4, [i.id for i in tilehistory[3]])
+        print "tilehistory: " + str(tilehistory)
+        print firstframe_level0_tiles
+     #   plot_generator.plot_tile_cube(firstframe_level0_tiles)
+        plot_generator.plot_tile_cube_over_time(tilehistory)
+      
+    elif test_number == 5:
+    # TODO; here we have a fixed bandwith 
+        print "implement me!"
+        
 
 if __name__ == '__main__':
     if len(sys.argv) > 1:

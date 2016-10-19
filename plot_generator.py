@@ -17,6 +17,9 @@ from operator import add
 from PIL import Image
 from PIL import ImageDraw
 
+from matplotlib.widgets import Button
+
+
 class plot_generator:
 
     def __init__(self):
@@ -178,6 +181,7 @@ class plot_generator:
                 X, Y = np.meshgrid([1, 2], [0, 1])
             print "X: " + str(X)
             print "Y: " + str(Y)
+            
             color0 = 1 if 0 in tile_ids else 0.1
             color1 = 1 if 1 in tile_ids else 0.1
             color2 = 1 if 2 in tile_ids else 0.1
@@ -219,6 +223,22 @@ class plot_generator:
         ax.set_zlabel('Z')
         plt.show()
        
+    @staticmethod
+    def plot_tile_cube_over_time(tilehistory):
+        tileidhistory = [[i.id for i in tiles] for tiles in tilehistory]
+        level0_tileidhistory = [filter(lambda x: x < 4, tiles) for tiles in tileidhistory]
+        
+        fig, ax = plt.subplots()
+        plt.subplots_adjust(bottom=0.2)
+
+        callback = Index(level0_tileidhistory, fig)
+        axprev = plt.axes([0.7, 0.05, 0.1, 0.075])
+        axnext = plt.axes([0.81, 0.05, 0.1, 0.075])
+        bnext = Button(axprev, 'Next')
+        bnext.on_clicked(callback.next)
+        bprev = Button(axnext, 'Previous')
+        bprev.on_clicked(callback.prev)  
+        plt.show()
 
     @staticmethod
     def plot_cube(i_s):
@@ -286,6 +306,99 @@ class plot_generator:
         ax.set_ylabel('Y')
         ax.set_zlabel('Z')
         plt.show()
+
+
+class Index(object):
+    ind = 0
+    
+    def __init__(self, tileidhistory, fig):
+        self.tileidhistory = tileidhistory
+        print "\n\n\ntile id history: \n" + str(tileidhistory) + "\n\n\n"
+        self.ind = 0
+        self.fig = fig
+    
+    @staticmethod
+    def plot_tile_cube(tile_ids, fig):
+        i_s = [0, 1, 2, 3]
+        # similar to plot_cube, except that the alpha for each block is based on tile id
+        point_base = np.array([[0, 0, 0],
+                               [1, 0, 0],
+                               [1, 1, 0],
+                               [0, 1, 0],
+                               [0, 0, 1],
+                               [1, 0, 1],
+                               [1, 1, 1],
+                               [0, 1, 1]])
+        shifts = [[0, 0, 0], [1, 0, 0], [0, 0, -1], [1, 0, -1]]
+   #     fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        for i in i_s:
+            if i == 0:
+                r = [0, 1]
+            elif i == 1:
+                r = [1, 2]
+            elif i == 2:
+                r = [0, 1]
+            if i == 0:
+                X, Y = np.meshgrid([0, 1], [0, 1])
+            if i == 1:
+                X, Y = np.meshgrid([1, 2], [0, 1])
+            if i == 2:
+                X, Y = np.meshgrid([0, 1], [0, 1])
+            if i == 3:
+                X, Y = np.meshgrid([1, 2], [0, 1])
+            print "X: " + str(X)
+            print "Y: " + str(Y)
+            
+            color0 = 1 if 0 in tile_ids else 0.1
+            color1 = 1 if 1 in tile_ids else 0.1
+            color2 = 1 if 2 in tile_ids else 0.1
+            color3 = 1 if 3 in tile_ids else 0.1
+            
+            if i == 0:
+                ax.plot_surface(X, Y, 1, alpha=color0)
+                ax.plot_surface(X, Y, 0, alpha=color0)
+                ax.plot_surface(X, 0, Y, alpha=color0)
+                ax.plot_surface(X, 1, Y, alpha=color0)
+                ax.plot_surface(0, X, Y, alpha=color0)
+                ax.plot_surface(1, X, Y, alpha=color0)
+            elif i == 1:
+                ax.plot_surface(X, Y, 1, alpha=color1)
+                ax.plot_surface(X, Y, 0, alpha=color1)
+                ax.plot_surface(X, 0, Y, alpha=color1)
+                ax.plot_surface(X, 1, Y, alpha=color1)
+                ax.plot_surface(2, [[0, 1],[0, 1]], Y, alpha=color1)
+                ax.plot_surface(1, [[0, 1],[0, 1]], Y, alpha=color1)
+            elif i == 2:
+                ax.plot_surface(X, Y, 0, alpha=color2)
+                ax.plot_surface(X, Y, -1, alpha=color2)
+                ax.plot_surface(X, 0, [[-1, -1],[0, 0]], alpha=color2)
+                ax.plot_surface(X, 1, [[-1, -1],[0, 0]], alpha=color2)
+                ax.plot_surface(1, X, [[-1, -1],[0, 0]], alpha=color2)
+                ax.plot_surface(0, X, [[-1, -1],[0, 0]], alpha=color2)
+            elif i == 3:
+                ax.plot_surface(X, Y, 0, alpha=color3)
+                ax.plot_surface(X, Y, -1, alpha=color3)
+                ax.plot_surface(X, 0, [[-1, -1], [0, 0]], alpha=color3)
+                ax.plot_surface(X, 1, [[-1, -1],[0, 0]], alpha=color3)
+                ax.plot_surface(2, [[0, 1],[0, 1]], [[-1, -1],[0, 0]], alpha=color3)
+                ax.plot_surface(1, [[0, 1],[0, 1]], [[-1, -1],[0, 0]], alpha=color3)
+            points = np.array([map(add, p, shifts[i])  for p in point_base])
+            print points
+            ax.scatter3D(points[:,0], points[:,1], points[:,2])
+        ax.set_xlabel('X')
+        ax.set_ylabel('Y')
+        ax.set_zlabel('Z')
+
+    def next(self, event):
+        self.ind += 1
+        self.plot_tile_cube(self.tileidhistory[self.ind%4], self.fig)
+        plt.draw()
+
+    def prev(self, event):
+        self.ind -= 1
+        self.plot_tile_cube(self.tileidhistory[self.ind%4], self.fig)
+        plt.draw()
 
 
 if __name__ == '__main__':

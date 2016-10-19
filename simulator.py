@@ -32,6 +32,7 @@ class simulator:
         # history format:
         # at current time point, which set of tiles hase been transmitted (with lifetime)
         history_lst = []
+        tile_history = []
         print "simulating " + model.get_name()
         if model.get_name() == 'model0':
             time_length = len(motion)
@@ -132,6 +133,8 @@ class simulator:
                 for t in set(transmitted_windows_map):
                     curr_history.append([t, transmitted_windows_map[t]])
                 history_lst.append(curr_history)
+                tile_history.append(transmitted_tiles)
+                
                 total_pixel = simulator.get_transmitted_pixels(transmitted_tiles, trunk_size, model.get_w(), model.get_h())
        #         curr_bdwh, total_pixel = comsume_remaining_bandwidth(curr_bdwh, total_pixel, transmitted_windows_map, transmitted_tiles)
                 actual_pixel = curr_view.get_pixels() # actual number of pixels get displayed
@@ -141,7 +144,7 @@ class simulator:
                 h_over_time.append(curr_overhead)
                 d_over_time.append(0)
   # TODO: can we put the strategy into a JSON?
-        return h_over_time, d_over_time, history_lst
+        return h_over_time, d_over_time, history_lst, tile_history
 
     @staticmethod
     def compute_minus_overhead(total_pixel, actual_pixel):
