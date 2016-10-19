@@ -147,6 +147,80 @@ class plot_generator:
             plot_cube(h)
 
     @staticmethod
+    def plot_tile_cube(tile_ids):
+        i_s = [0, 1, 2, 3]
+        # similar to plot_cube, except that the alpha for each block is based on tile id
+        point_base = np.array([[0, 0, 0],
+                               [1, 0, 0],
+                               [1, 1, 0],
+                               [0, 1, 0],
+                               [0, 0, 1],
+                               [1, 0, 1],
+                               [1, 1, 1],
+                               [0, 1, 1]])
+        shifts = [[0, 0, 0], [1, 0, 0], [0, 0, -1], [1, 0, -1]]
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        for i in i_s:
+            if i == 0:
+                r = [0, 1]
+            elif i == 1:
+                r = [1, 2]
+            elif i == 2:
+                r = [0, 1]
+            if i == 0:
+                X, Y = np.meshgrid([0, 1], [0, 1])
+            if i == 1:
+                X, Y = np.meshgrid([1, 2], [0, 1])
+            if i == 2:
+                X, Y = np.meshgrid([0, 1], [0, 1])
+            if i == 3:
+                X, Y = np.meshgrid([1, 2], [0, 1])
+            print "X: " + str(X)
+            print "Y: " + str(Y)
+            color0 = 1 if 0 in tile_ids else 0.1
+            color1 = 1 if 1 in tile_ids else 0.1
+            color2 = 1 if 2 in tile_ids else 0.1
+            color3 = 1 if 3 in tile_ids else 0.1
+            
+            if i == 0:
+                ax.plot_surface(X, Y, 1, alpha=color0)
+                ax.plot_surface(X, Y, 0, alpha=color0)
+                ax.plot_surface(X, 0, Y, alpha=color0)
+                ax.plot_surface(X, 1, Y, alpha=color0)
+                ax.plot_surface(0, X, Y, alpha=color0)
+                ax.plot_surface(1, X, Y, alpha=color0)
+            elif i == 1:
+                ax.plot_surface(X, Y, 1, alpha=color1)
+                ax.plot_surface(X, Y, 0, alpha=color1)
+                ax.plot_surface(X, 0, Y, alpha=color1)
+                ax.plot_surface(X, 1, Y, alpha=color1)
+                ax.plot_surface(2, [[0, 1],[0, 1]], Y, alpha=color1)
+                ax.plot_surface(1, [[0, 1],[0, 1]], Y, alpha=color1)
+            elif i == 2:
+                ax.plot_surface(X, Y, 0, alpha=color2)
+                ax.plot_surface(X, Y, -1, alpha=color2)
+                ax.plot_surface(X, 0, [[-1, -1],[0, 0]], alpha=color2)
+                ax.plot_surface(X, 1, [[-1, -1],[0, 0]], alpha=color2)
+                ax.plot_surface(1, X, [[-1, -1],[0, 0]], alpha=color2)
+                ax.plot_surface(0, X, [[-1, -1],[0, 0]], alpha=color2)
+            elif i == 3:
+                ax.plot_surface(X, Y, 0, alpha=color3)
+                ax.plot_surface(X, Y, -1, alpha=color3)
+                ax.plot_surface(X, 0, [[-1, -1], [0, 0]], alpha=color3)
+                ax.plot_surface(X, 1, [[-1, -1],[0, 0]], alpha=color3)
+                ax.plot_surface(2, [[0, 1],[0, 1]], [[-1, -1],[0, 0]], alpha=color3)
+                ax.plot_surface(1, [[0, 1],[0, 1]], [[-1, -1],[0, 0]], alpha=color3)
+            points = np.array([map(add, p, shifts[i])  for p in point_base])
+            print points
+            ax.scatter3D(points[:,0], points[:,1], points[:,2])
+        ax.set_xlabel('X')
+        ax.set_ylabel('Y')
+        ax.set_zlabel('Z')
+        plt.show()
+       
+
+    @staticmethod
     def plot_cube(i_s):
         # for a cube, needs to have the 8 points
         point_base = np.array([[0, 0, 0],
@@ -173,6 +247,8 @@ class plot_generator:
                 X, Y = np.meshgrid([1, 2], [0, 1])
             if i == 2:
                 X, Y = np.meshgrid([0, 1], [0, 1])
+            if i == 3:
+                X, Y = np.meshgrid([1, 2], [0, 1])
             print "X: " + str(X)
             print "Y: " + str(Y)
             if i == 0:
@@ -196,10 +272,16 @@ class plot_generator:
                 ax.plot_surface(X, 1, [[-1, -1],[0, 0]], alpha=0.5)
                 ax.plot_surface(1, X, [[-1, -1],[0, 0]], alpha=0.5)
                 ax.plot_surface(0, X, [[-1, -1],[0, 0]], alpha=0.5)
+            elif i == 3:
+                ax.plot_surface(X, Y, 0, alpha=0.5)
+                ax.plot_surface(X, Y, -1, alpha=0.5)
+                ax.plot_surface(X, 0, [[-1, -1], [0, 0]], alpha=0.5)
+                ax.plot_surface(X, 1, [[-1, -1],[0, 0]], alpha=0.5)
+                ax.plot_surface(2, [[0, 1],[0, 1]], [[-1, -1],[0, 0]], alpha=0.5)
+                ax.plot_surface(1, [[0, 1],[0, 1]], [[-1, -1],[0, 0]], alpha=0.5)
             points = np.array([map(add, p, shifts[i])  for p in point_base])
             print points
             ax.scatter3D(points[:,0], points[:,1], points[:,2])
-
         ax.set_xlabel('X')
         ax.set_ylabel('Y')
         ax.set_zlabel('Z')
@@ -209,4 +291,5 @@ class plot_generator:
 if __name__ == '__main__':
     #plot_generator.test_plot_rect()
     #plot_generator.test_plot_motion()
-    plot_generator.plot_cube([0, 1, 2])
+ #   plot_generator.plot_cube([0, 1, 2, 3])
+    plot_generator.plot_tile_cube([0, 2])
