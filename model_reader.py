@@ -1,8 +1,8 @@
 # model reader is used for reading a model from a JSON file and
 # generate a model object
 
-from model import model
-from model_new import model_new
+from model import model, model_new
+#from model import model_new
 from logger import logger
 import json
 from pprint import pprint
