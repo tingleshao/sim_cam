@@ -2,6 +2,7 @@
 # generate a model object
 
 from model import model
+from model_new import model_new
 from logger import logger
 import json
 from pprint import pprint
@@ -18,6 +19,19 @@ class model_reader:
             model_data = json.load(model_file)
         pprint(model_data)
         model_obj = model(model_data["name"], model_data["width"], model_data["height"])
+        return model_obj
+
+    @staticmethod
+    def read_model_new(file_name):
+        with open(file_name) as model_file:
+            model_data = json.load(model_file)
+        pprint(model_data)
+        model_obj = model_new(model_data["name"], model_data["width"],
+                              model_data["height"], model_data["n_of_cams"],
+                              model_data["frame_rate"], model_data["bit_rate"],
+                              model_data["tiling"], model_data["scaling"],
+                              model_data["I_frame_freq"],
+                              model_data["storage_size"])
         return model_obj
 
     @staticmethod
