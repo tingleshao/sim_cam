@@ -1,5 +1,5 @@
 # this script generates a spread sheet
-# format: # of cameras | cam_size | F. R. | B.R. | tiling | scaling | freq. of I frames | (storage size) |
+# format: # of cameras | cam_size | F.R. | B.R. | tiling | scaling | freq. of I frames | (storage size) |
 
 # systems : (tegra | highsilicon) -> Ingest | Storage | transmit | (play at which scale) -> Render |
 
@@ -16,8 +16,13 @@ class generate_spreadsheet:
         with open('eggs.csv', 'wb') as csvfile:
             spamwriter = csv.writer(csvfile, delimiter=' ', quotechar='|',
                                     quoting=csv.QUOTE_MINIMAL)
-            spamwriter.writerow(['Spam'] * 5 + ['Baked Beans'])
+            column_titles = generate_column_titles()
+            spamwriter.writerow(column_titles)
             spamwriter.writerow(['Spam', 'Lovely Spam', "Wonderful Spam"])
+
+   @staticmethod
+   def generate_column_titles():
+       return ['N_of_cams', 'cam_size', 'frame_rate', 'bit_rate', 'tiling', 'scaling', 'I_frame_freq', 'storage_size']
 
 
 def main():
