@@ -16,13 +16,13 @@ class generate_spreadsheet:
         with open('eggs.csv', 'wb') as csvfile:
             spamwriter = csv.writer(csvfile, delimiter=' ', quotechar='|',
                                     quoting=csv.QUOTE_MINIMAL)
-            column_titles = generate_column_titles()
+            column_titles = generate_spreadsheet.generate_column_titles()
             spamwriter.writerow(column_titles)
             spamwriter.writerow(['Spam', 'Lovely Spam', "Wonderful Spam"])
 
-   @staticmethod
-   def generate_column_titles():
-       return ['N_of_cams', 'cam_size', 'frame_rate', 'bit_rate', 'tiling', 'scaling', 'I_frame_freq', 'storage_size']
+    @staticmethod
+    def generate_column_titles():
+        return ['N_of_cams', 'cam_size', 'frame_rate', 'bit_rate', 'tiling', 'scaling', 'I_frame_freq', 'storage_size']
 
 
 def main():
