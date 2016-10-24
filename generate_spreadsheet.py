@@ -10,12 +10,11 @@ class generate_spreadsheet:
 
     @staticmethod
     def write_to_csv():
-        with open('eggs.csv', 'wb') as csvfile:
+        with open('test.csv', 'wb') as csvfile:
             spamwriter = csv.writer(csvfile, delimiter=' ', quotechar='|',
                                     quoting=csv.QUOTE_MINIMAL)
             column_titles = generate_spreadsheet.generate_column_titles()
             spamwriter.writerow(column_titles)
-            spamwriter.writerow(['Spam', 'Lovely Spam', "Wonderful Spam"])
             spamwriter.writerow(generate_spreadsheet
                                 .read_from_model("models/model0_new.json"))
 
