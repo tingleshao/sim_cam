@@ -61,12 +61,8 @@ class plot_generator:
         cax = inset_axes(currentAxis, width="8%", height='70%', loc=4)
         cbar = matplotlib.colorbar.ColorbarBase(cax, cmap=cmap, boundaries=bounds)
         cax.yaxis.set_ticks_position('left')
-    #    cbar.ax.set_yticklabels([str(i) for i in range(len)])
         cax.yaxis.set_label_position('left')
         cbar.set_label('Income (,000s)')
-    #    plt.show()
-
-        return None
 
     @staticmethod
     def generate_color_spectrum(input_range):
@@ -93,7 +89,6 @@ class plot_generator:
         plt.subplots_adjust(left=0, right=1, bottom=0, top=1)
         plt.axis('equal')
         plt.axis('off')
-    #    plt.show()
 
     @staticmethod
     def get_rect(x, y, width, height, angle):
@@ -227,9 +222,7 @@ class plot_generator:
     def plot_tile_cube_over_time(tilehistory, fig):
         tileidhistory = [[i.id for i in tiles] for tiles in tilehistory]
         level0_tileidhistory = [filter(lambda x: x < 4, tiles) for tiles in tileidhistory]
-
     #    plt.subplots_adjust(bottom=0.2)
-
         callback = Index(level0_tileidhistory, fig)
         axprev = plt.axes([0.7, 0.05, 0.1, 0.075])
         axnext = plt.axes([0.81, 0.05, 0.1, 0.075])
@@ -329,7 +322,6 @@ class Index(object):
                                [1, 1, 1],
                                [0, 1, 1]])
         shifts = [[0, 0, 0], [1, 0, 0], [0, 0, -1], [1, 0, -1]]
-   #     fig = plt.figure()
         ax = fig.add_subplot(223, projection='3d')
         for i in i_s:
             if i == 0:

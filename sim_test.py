@@ -34,7 +34,6 @@ def test(test_number):
         plt.subplot(2,2,2)
         plt.plot(h_over_time, 'bo-')
         plt.show()
-        #main.run()
 
     # Test 1: 2 Layers
     # Trivial strategy 1
@@ -81,14 +80,9 @@ def test(test_number):
         print "d_over_time: " + str(d_over_time)
         fig.add_subplot(2,2,2)
         plt.plot(h_over_time, 'bo-')
-    #    plt.show()
         firstframe_level0_tiles = filter(lambda x: x < 4, [i.id for i in tilehistory[3]])
         print "tilehistory: " + str(tilehistory)
         print firstframe_level0_tiles
-     #   plot_generator.plot_tile_cube(firstframe_level0_tiles)
-        #figs = plt.subplot(2,2,3)
-    #    fig.add_subplot(2,2,3)
-    #    plt.subplot(2,2,3)
         plot_generator.plot_tile_cube_over_time(tilehistory, fig)
         plt.show()
 
