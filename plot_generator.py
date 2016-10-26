@@ -55,7 +55,7 @@ class plot_generator:
                                              w, h,
                                              alpha=1, facecolor='none',
                                              edgecolor=color_lst[i]))
-        # TODO: here has some strange stupid stuff going on 
+        # TODO: here has some strange stupid stuff going on
         cmap = matplotlib.colors.ListedColormap(color_lst)
         bounds=range(len(motion)+1)
         cax = inset_axes(currentAxis, width="8%", height='70%', loc=4)
@@ -64,7 +64,7 @@ class plot_generator:
     #    cbar.ax.set_yticklabels([str(i) for i in range(len)])
         cax.yaxis.set_label_position('left')
         cbar.set_label('Income (,000s)')
-        plt.show()
+    #    plt.show()
 
         return None
 
@@ -93,7 +93,7 @@ class plot_generator:
         plt.subplots_adjust(left=0, right=1, bottom=0, top=1)
         plt.axis('equal')
         plt.axis('off')
-        plt.show()
+    #    plt.show()
 
     @staticmethod
     def get_rect(x, y, width, height, angle):
@@ -181,12 +181,12 @@ class plot_generator:
                 X, Y = np.meshgrid([1, 2], [0, 1])
             print "X: " + str(X)
             print "Y: " + str(Y)
-            
+
             color0 = 1 if 0 in tile_ids else 0.1
             color1 = 1 if 1 in tile_ids else 0.1
             color2 = 1 if 2 in tile_ids else 0.1
             color3 = 1 if 3 in tile_ids else 0.1
-            
+
             if i == 0:
                 ax.plot_surface(X, Y, 1, alpha=color0)
                 ax.plot_surface(X, Y, 0, alpha=color0)
@@ -222,14 +222,13 @@ class plot_generator:
         ax.set_ylabel('Y')
         ax.set_zlabel('Z')
         plt.show()
-       
+
     @staticmethod
-    def plot_tile_cube_over_time(tilehistory):
+    def plot_tile_cube_over_time(tilehistory, fig):
         tileidhistory = [[i.id for i in tiles] for tiles in tilehistory]
         level0_tileidhistory = [filter(lambda x: x < 4, tiles) for tiles in tileidhistory]
-        
-        fig, ax = plt.subplots()
-        plt.subplots_adjust(bottom=0.2)
+
+    #    plt.subplots_adjust(bottom=0.2)
 
         callback = Index(level0_tileidhistory, fig)
         axprev = plt.axes([0.7, 0.05, 0.1, 0.075])
@@ -237,11 +236,11 @@ class plot_generator:
         bnext = Button(axprev, 'Next')
         bnext.on_clicked(callback.next)
         bprev = Button(axnext, 'Previous')
-        bprev.on_clicked(callback.prev)  
+        bprev.on_clicked(callback.prev)
         plt.show()
 
     @staticmethod
-    def plot_cube(i_s):
+    def plot_cube(i_s, fig):
         # for a cube, needs to have the 8 points
         point_base = np.array([[0, 0, 0],
                            [1, 0, 0],
@@ -310,13 +309,13 @@ class plot_generator:
 
 class Index(object):
     ind = 0
-    
+
     def __init__(self, tileidhistory, fig):
         self.tileidhistory = tileidhistory
         print "\n\n\ntile id history: \n" + str(tileidhistory) + "\n\n\n"
         self.ind = 0
         self.fig = fig
-    
+
     @staticmethod
     def plot_tile_cube(tile_ids, fig):
         i_s = [0, 1, 2, 3]
@@ -331,7 +330,7 @@ class Index(object):
                                [0, 1, 1]])
         shifts = [[0, 0, 0], [1, 0, 0], [0, 0, -1], [1, 0, -1]]
    #     fig = plt.figure()
-        ax = fig.add_subplot(111, projection='3d')
+        ax = fig.add_subplot(223, projection='3d')
         for i in i_s:
             if i == 0:
                 r = [0, 1]
@@ -349,12 +348,12 @@ class Index(object):
                 X, Y = np.meshgrid([1, 2], [0, 1])
             print "X: " + str(X)
             print "Y: " + str(Y)
-            
+
             color0 = 1 if 0 in tile_ids else 0.1
             color1 = 1 if 1 in tile_ids else 0.1
             color2 = 1 if 2 in tile_ids else 0.1
             color3 = 1 if 3 in tile_ids else 0.1
-            
+
             if i == 0:
                 ax.plot_surface(X, Y, 1, alpha=color0)
                 ax.plot_surface(X, Y, 0, alpha=color0)
