@@ -391,6 +391,9 @@ class Index(object):
         self.plot_tile_cube(self.tileidhistory[self.ind%4], self.fig)
         plt.draw()
 
+    def plot_tile_scale():
+        # plot the bytes per second feed into the decoder vs. tiles and scales
+        print "implement me!
 
 if __name__ == '__main__':
     #plot_generator.test_plot_rect()
