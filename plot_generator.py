@@ -299,6 +299,37 @@ class plot_generator:
         ax.set_zlabel('Z')
         plt.show()
 
+    @staticmethod
+    def plot_tile_scale():
+        # plot the bytes per second feed into the decoder vs. tiles and scales
+        zoom_in = np.array([1440, 1440, 1440, 1440, 1440, 6000])
+        zoom_out = np.array([5760, 1440, 1440, 5760, 1440, 5760])
+        ind =  np.arange(6)  # 210 211 212 220 221 110
+        width = 0.35
+        fig, ax = plt.subplots()
+        rects1 = ax.bar(ind, zoom_in, width , color='r')
+        rects2 = ax.bar(ind+0.35, zoom_out,  width, color='y')
+
+        ax.set_ylabel('bandwidth')
+        ax.set_title('requred bandwidth for different tile & scale settings')
+        ax.set_xticks(ind+width)
+        ax.set_xticklabels(('210', '211', '212', '220', '221', '110'))
+        ax.set_ylim(0,9000)
+        ax.legend((rects1[0], rects2[0]), ('zoom_in', 'zoom_out'))
+
+        plot_generator.autolabel(rects1, ax)
+        plot_generator.autolabel(rects2, ax)
+
+        plt.show()
+
+    @staticmethod
+    def autolabel(rects, ax):
+        for rect in rects:
+            height = rect.get_height()
+            ax.text(rect.get_x() + rect.get_width()/2., 1.05*height,
+                    '%d' % int(height),
+                    ha='center', va='bottom')
+
 
 class Index(object):
     ind = 0
@@ -337,6 +368,7 @@ class Index(object):
             if i == 2:
                 X, Y = np.meshgrid([0, 1], [0, 1])
             if i == 3:
+
                 X, Y = np.meshgrid([1, 2], [0, 1])
             print "X: " + str(X)
             print "Y: " + str(Y)
@@ -396,4 +428,5 @@ if __name__ == '__main__':
     #plot_generator.test_plot_rect()
     #plot_generator.test_plot_motion()
  #   plot_generator.plot_cube([0, 1, 2, 3])
-    plot_generator.plot_tile_cube([0, 2])
+#    plot_generator.plot_tile_cube([0, 2])
+    plot_generator.plot_tile_scale()
