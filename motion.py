@@ -6,7 +6,7 @@
 #    - timestamp
 
 
-class motion:
+class view:
     def __init__(self, timestamp, start_pt, down_pt):
         self.timestamp = timestamp
         self.start_pt = start_pt
@@ -34,7 +34,7 @@ self.start_pt[0], self.start_pt[1], self.down_pt[0], self.down_pt[1])
 
 
 def test():
-    m0 = motion(0, (0, 0), (100, 100))
+    m0 = view(0, (0, 0), (100, 100))
     print str(m0)
 
 if __name__ == '__main__':

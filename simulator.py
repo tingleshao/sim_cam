@@ -10,7 +10,7 @@
 
 
 from model import model
-from motion import motion
+from motion import view
 from tile import tile
 from logger import logger
 
@@ -19,13 +19,12 @@ class simulator:
     def __init__(self):
         print "you just initialized a simulator!"
 
-
-    # TODO: change the h number to be the ration (p0-p1) / p0 ...
+    # TODO: change the h number to be the ratio (p0-p1) / p0 ...
     @staticmethod
     def simulate(model, motion, args):
         # do the simulation
         # model: information about the system
-        # motion: user view point
+        # motion: user view region
         # args: other parameters
         h_over_time = []
         d_over_time = []
@@ -33,17 +32,18 @@ class simulator:
         # at current time point, which set of tiles hase been transmitted (with lifetime)
         history_lst = []
         tile_history = []
+
+        time_length = len(motion)
+        header_size = args.get("header")
+        chunk_size = args.get("chunk_size")
         print "simulating " + model.get_name()
         if model.get_name() == 'model0':
-            time_length = len(motion)
             total_pixel = model.h * model.w
-            header_size = args.get("header")
-            trunk_size = args.get("trunk_size")
             curr_t = 0
             for i in xrange(time_length):
                 curr_t += 1
                 curr_overhead = 0
-                if curr_t == trunk_size:
+                if curr_t == chunk_size:
                     curr_t = 0
                     curr_overhead += header_size
                     print "total_pixel: " + str(total_pixel)
@@ -58,10 +58,7 @@ class simulator:
 
         elif model.get_name() == 'model3':
             # model3: 2 layers, only transmit the required tiles in any level, also transmit related tiles in the other level
-            time_length = len(motion)
             total_pixel = 1
-            header_size = args.get("header")
-            trunk_size = args.get("trunk_size")
             # keep an map to save all the transmitted data for the current time
             # for any time period x, we keep an array of recived tile index
             # so that at any time point
@@ -77,7 +74,7 @@ class simulator:
                 for tile in tiles:
                     # if current storage does not have this tile, transmit it
                     if tile.get_id() not in transmitted_windows_map.keys():
-                         transmitted_windows_map[tile.get_id()] = trunk_size
+                         transmitted_windows_map[tile.get_id()] = chunk_size
                          transmitted_tiles.append(tile)
                          print transmitted_windows_map
                 # reduce life time for all tiles
@@ -90,7 +87,7 @@ class simulator:
                 for t in set(transmitted_windows_map):
                     curr_history.append([t, transmitted_windows_map[t]])
                 history_lst.append(curr_history)
-                total_pixel = simulator.get_transmitted_pixels(transmitted_tiles, trunk_size, model.get_w(), model.get_h())
+                total_pixel = simulator.get_transmitted_pixels(transmitted_tiles, chunk_size, model.get_w(), model.get_h())
                 actual_pixel = curr_view.get_pixels() # actual number of pixels get displayed
                 print "total_pixel: " + str(total_pixel)
                 print "actual_pixel: " + str(actual_pixel)
@@ -104,10 +101,7 @@ class simulator:
         elif model.get_name() == 'model4':
             curr_bdwh = 10000
             ahead_limit = 2
-            time_length = len(motion)
             total_pixel = 1
-            header_size = args.get("header")
-            trunk_size = args.get("trunk_size")
             transmitted_windows_map = {}
             for i in xrange(time_length):
                 curr_overhead = 0
@@ -118,11 +112,11 @@ class simulator:
                 for tile in tiles:
                     # if current memory does not keep this tile for now and 1 frame later, transmit it
                     if tile.get_id() not in transmitted_windows_map.keys():
-                        transmitted_windows_map[tile.get_id()] = trunk_size
+                        transmitted_windows_map[tile.get_id()] = chunk_size
                         transmitted_tiles.append(tile)
                         print transmitted_windows_map
                     elif transmitted_windows_map[tile.get_id()] < ahead_limit:
-                        transmitted_windows_map[tile.get_id()] += trunk_size
+                        transmitted_windows_map[tile.get_id()] += chunk_size
                         transmitted_tiles.append(tile)
                 for tile_id in transmitted_windows_map.keys():
                     if transmitted_windows_map[tile_id] == 1:
@@ -134,8 +128,8 @@ class simulator:
                     curr_history.append([t, transmitted_windows_map[t]])
                 history_lst.append(curr_history)
                 tile_history.append(transmitted_tiles)
-                
-                total_pixel = simulator.get_transmitted_pixels(transmitted_tiles, trunk_size, model.get_w(), model.get_h())
+
+                total_pixel = simulator.get_transmitted_pixels(transmitted_tiles, chunk_size, model.get_w(), model.get_h())
        #         curr_bdwh, total_pixel = comsume_remaining_bandwidth(curr_bdwh, total_pixel, transmitted_windows_map, transmitted_tiles)
                 actual_pixel = curr_view.get_pixels() # actual number of pixels get displayed
                 print "total_pixel: " + str(total_pixel)
@@ -217,7 +211,7 @@ class simulator:
 
 
     @staticmethod
-    def get_transmitted_pixels(tiles, trunk_size, model_w ,model_h):
+    def get_transmitted_pixels(tiles, chunk_size, model_w ,model_h):
         #  if condition on levels
         level0_w = model_w / 2
         level0_h = model_h / 2
@@ -237,8 +231,8 @@ class simulator:
     @staticmethod
     def get_history():
         # supporse to return the record history
-        # history format: 
-        return None 
+        # history format:
+        return None
 
 
 def test():
@@ -248,7 +242,7 @@ def test():
     m2 = motion(2, (40, 75), (50, 18))
     m3 = motion(3, (45, 55), (20, 10))
     motions = [m0, m1, m2, m3]
-    args = {"header": 10, "trunk_size": 5}
+    args = {"header": 10, "chunk_size": 5}
     h_over_time, d_over_time = simulator.simulate(model0, motions, args)
     print "h_over_time: " + str(h_over_time)
     print "d_over_time: " + str(d_over_time)

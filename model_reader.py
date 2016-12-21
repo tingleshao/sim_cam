@@ -6,7 +6,7 @@ from model import model, model_new
 from logger import logger
 import json
 from pprint import pprint
-from motion import motion
+from motion import view
 
 class model_reader:
 
@@ -35,13 +35,13 @@ class model_reader:
         return model_obj
 
     @staticmethod
-    def read_motions(file_name):
+    def read_views(file_name):
         with open(file_name) as model_file:
             model_data = json.load(model_file)
         pprint(model_data)
         motions = []
         for m in model_data["motions"]:
-            motions.append(motion(m["timestamp"], (m["start_pt"]['x'], m["start_pt"]['y']),
+            motions.append(view(m["timestamp"], (m["start_pt"]['x'], m["start_pt"]['y']),
              (m['down_pt']['x'], m['down_pt']['y'])))
         return motions
 

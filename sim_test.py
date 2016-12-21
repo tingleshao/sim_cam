@@ -1,33 +1,30 @@
 # This is the test for the simulation program
 import main as main
+import matplotlib.pyplot as plt
+import numpy as np
 import sys
 from data_saver import data_saver
-import numpy as np
-import matplotlib.pyplot as plt
 from model import model
-from motion import motion
-from simulator import simulator
-from plot_generator import plot_generator
 from model_reader import model_reader
+from motion import view
+from plot_generator import plot_generator
+from simulator import simulator
 
 
-# TODO: later change this name "motion" to "view"
+# TODO: figure out what main.py does
 def test(test_number):
     # Test 0: 1 Layer, 2x2, 1024 x 768
     # Trivial strategy 1
     if test_number == 0:
+        # read model data and view data
         model0 = model_reader.read_model('models/model0.json')
+        motions = model_reader.read_views('models/model0.json')
 
-        m0 = motion(0, (1,1), (149, 149*2/3))
-        m1 = motion(1, (19,13), (19+111, 13+(111*2/3)))
-        m2 = motion(2, (56, 20), (56+65, 20+(65*2/3)))
-        m3 = motion(3, (80, 30), (80+30, 30+20))
-
-        #motions = [m0, m1, m2, m3]
-        motions = model_reader.read_motions('models/model0.json')
         plt.subplot(2,2,1)
+        # plot view data as a cascade of rectangles
         plot_generator.plot_motion(motions, model0)
         args = {"header": 10, "trunk_size": 5}
+        # simulate the system behavior (including h over time and d over time)
         h_over_time, d_over_time, his, tilehistory = simulator.simulate(model0, motions, args)
         print "h_over_time: " + str(h_over_time)
         print "d_over_time: " + str(d_over_time)
@@ -35,24 +32,13 @@ def test(test_number):
         plt.plot(h_over_time, 'bo-')
         plt.show()
 
-    # Test 1: 2 Layers
-    # Trivial strategy 1
-    elif test_number == 1:
-        main.run()
-
-    # Test 2: 1 Layer
-    # Trivial stategy 2
-    elif test_number == 2:
-        #model0 = model()
-        main.run()
-
     # Test 3: 2 Layers
     # Trivial strategy 2
     elif test_number == 3:
         model3 = model_reader.read_model('models/model3.json')
         print "model3 name: " + model3.get_name()
 
-        motions = model_reader.read_motions('models/model3.json')
+        motions = model_reader.read_views('models/model3.json')
         plot_generator.plot_motion(motions, model3)
 
         args = {"header": 10, "trunk_size": 2}
@@ -68,7 +54,7 @@ def test(test_number):
         model4 = model_reader.read_model('models/model4.json')
         print "model4 name: " + model4.get_name()
 
-        motions = model_reader.read_motions('models/model4.json')
+        motions = model_reader.read_views('models/model4.json')
         fig = plt.figure()
         fig.add_subplot(2,2,1)
         plot_generator.plot_motion(motions, model4)
