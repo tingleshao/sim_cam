@@ -23,7 +23,7 @@ def test(test_number):
         plt.subplot(2,2,1)
         # plot view data as a cascade of rectangles
         plot_generator.plot_motion(motions, model0)
-        args = {"header": 10, "trunk_size": 5}
+        args = {"header": 10, "chunk_size": 5}
         # simulate the system behavior (including h over time and d over time)
         h_over_time, d_over_time, his, tilehistory = simulator.simulate(model0, motions, args)
         print "h_over_time: " + str(h_over_time)
@@ -41,7 +41,7 @@ def test(test_number):
         motions = model_reader.read_views('models/model3.json')
         plot_generator.plot_motion(motions, model3)
 
-        args = {"header": 10, "trunk_size": 2}
+        args = {"header": 10, "chunk_size": 2}
         h_over_time, d_over_time, his, tilehistory = simulator.simulate(model3, motions, args)
 
         print "h_over_time: " + str(h_over_time)
@@ -59,7 +59,7 @@ def test(test_number):
         fig.add_subplot(2,2,1)
         plot_generator.plot_motion(motions, model4)
 
-        args = {"header": 10, "trunk_size": 2}
+        args = {"header": 10, "chunk_size": 2}
         h_over_time, d_over_time, his, tilehistory = simulator.simulate(model4, motions, args)
 
         print "h_over_time: " + str(h_over_time)
