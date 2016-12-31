@@ -49,7 +49,6 @@
 
 import argparse
 
-# TODO(chong): for now assume 1 layer 2x2 structure with trivial strategy 1
 def run(args):
     # call dispather, get model
     # use motion_generator, get motion
