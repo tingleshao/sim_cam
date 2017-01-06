@@ -33,7 +33,7 @@ def test(test_number):
 
     # Test 3: 2 Layers
     # Trivial strategy 2
-    elif test_number == 3:
+    elif test_number == 1:
         model3 = model_reader.read_model('models/model3.json')
         print "model3 name: " + model3.get_name()
 
@@ -49,7 +49,7 @@ def test(test_number):
         plt.plot(h_over_time, 'bo-')
         plt.show()
 
-    elif test_number == 4:
+    elif test_number == 2:
         model4 = model_reader.read_model('models/model4.json')
         print "model4 name: " + model4.get_name()
 
@@ -71,7 +71,7 @@ def test(test_number):
         plot_generator.plot_tile_cube_over_time(tilehistory, fig)
         plt.show()
 
-        
+
 
 
 if __name__ == '__main__':
