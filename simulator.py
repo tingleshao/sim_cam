@@ -10,6 +10,8 @@
 
 
 from model import model
+from model1d import model1d_new
+from model1d import model1d
 from motion import view
 from tile import tile
 from logger import logger
@@ -95,13 +97,52 @@ class simulator:
                 h_over_time.append(curr_overhead)
                 d_over_time.append(0)
 
-        # I am doing this for the aggressive transmission ( the most common one )
+        # model 4 is for the aggressive transmission ( the most common one )
         # the difference between this and model3 strategy is that this one enforces transmission that catches
         # current and the next frame
         elif model.get_name() == 'model4':
-            curr_bdwh = 10000
             ahead_limit = 2
             total_pixel = 1
+            transmitted_windows_map = {}
+            for i in xrange(time_length):
+                curr_overhead = 0
+                curr_view = motion[i]
+                tiles = simulator.get_tiles(curr_view, model) # get list of tiles to be displayed
+                transmitted_tiles = [] # list of tiles to be transmitted
+                print "tiles to be displayed: " + str(tiles)
+                for tile in tiles:
+                    # if current memory does not have this tile and 1 frame later
+                    # (assume the tile length is 2), we need transmit it
+                    if tile.get_id() not in transmitted_windows_map.keys():
+                        transmitted_windows_map[tile.get_id()] = chunk_size
+                        transmitted_tiles.append(tile)
+                    #    print transmitted_windows_map
+                    elif transmitted_windows_map[tile.get_id()] < ahead_limit:
+                        transmitted_windows_map[tile.get_id()] += chunk_size
+                        transmitted_tiles.append(tile)
+                # descrease tile lifetime
+                for tile_id in transmitted_windows_map.keys():
+                    if transmitted_windows_map[tile_id] == 1:
+                        transmitted_windows_map.pop(tile_id, None)
+                    else:
+                        transmitted_windows_map[tile_id] = transmitted_windows_map[tile_id] - 1
+                    curr_history = []
+                # record a history
+                for t in set(transmitted_windows_map):
+                    curr_history.append([t, transmitted_windows_map[t]])
+                history_lst.append(curr_history)
+                tile_history.append(transmitted_tiles)
+                total_pixel = simulator.get_transmitted_pixels(transmitted_tiles, chunk_size, model.get_w(), model.get_h())
+       #         curr_bdwh, total_pixel = comsume_remaining_bandwidth(curr_bdwh, total_pixel, transmitted_windows_map, transmitted_tiles)
+                actual_pixel = curr_view.get_pixels() # actual number of pixels get displayed
+                print "total_pixel: " + str(total_pixel)
+                print "actual_pixel: " + str(actual_pixel)
+                curr_overhead += simulator.compute_ratio_overhead(total_pixel, actual_pixel)
+                h_over_time.append(curr_overhead)
+                d_over_time.append(0)
+        # write a 1D model to verify
+        # model is 1D, we try different tile size, with a pariticular view series
+        elif model.get_name() == '1D':
             transmitted_windows_map = {}
             for i in xrange(time_length):
                 curr_overhead = 0
@@ -129,7 +170,7 @@ class simulator:
                 history_lst.append(curr_history)
                 tile_history.append(transmitted_tiles)
 
-                total_pixel = simulator.get_transmitted_pixels(transmitted_tiles, chunk_size, model.get_w(), model.get_h())
+                total_pixel = simulator.get_transmitted_pixels(transmitted_tiles, chunk_size, model.l())
        #         curr_bdwh, total_pixel = comsume_remaining_bandwidth(curr_bdwh, total_pixel, transmitted_windows_map, transmitted_tiles)
                 actual_pixel = curr_view.get_pixels() # actual number of pixels get displayed
                 print "total_pixel: " + str(total_pixel)
@@ -137,6 +178,8 @@ class simulator:
                 curr_overhead += simulator.compute_ratio_overhead(total_pixel, actual_pixel)
                 h_over_time.append(curr_overhead)
                 d_over_time.append(0)
+
+
   # TODO: can we put the strategy into a JSON?
         return h_over_time, d_over_time, history_lst, tile_history
 
@@ -149,6 +192,22 @@ class simulator:
     def compute_ratio_overhead(total_pixel, actual_pixel):
         return float(total_pixel - actual_pixel) / float(actual_pixel)
 
+
+    @staticmethod
+    def get_tiles_1d(curr_view, model):
+        model_l = model.get_l()
+        tiles = []
+        number_of_tiles = model.get_total_size() / model.get_l()
+        l = model.get_l()
+        for i in xrange(number_of_tiles):
+            start = i * l
+            end = (i+1) * l
+            if curr_view.get_start() <= start:
+                if curr_view.get_end() > start:
+                    tiles += tile(start, end)
+            elif curr_view.get_start() < end:
+                tiles += tile1d(start, end)
+         return tiles
 
     @staticmethod
     def get_tiles(curr_view, model):
@@ -208,6 +267,14 @@ class simulator:
         if (true_l1[1] < true_r2[1] or true_l2[1] < true_r1[1]):
             return False
         return True
+
+
+    @staticmethod
+    def get_transmitted_pixels(tiles, chunk_size, model_l):
+        print tiles
+        for tile in tiles:
+            total_pixels += level_l
+        return total_pixels
 
 
     @staticmethod

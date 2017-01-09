@@ -72,8 +72,6 @@ def test(test_number):
         plt.show()
 
 
-
-
 if __name__ == '__main__':
     if len(sys.argv) > 1:
         test_number = int(sys.argv[1])
