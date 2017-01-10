@@ -14,6 +14,11 @@ class model1d(model):
         self.l = l
         self.total_size = total_size
 
+#    def __init__(self, name, l):
+#        print "you just created a 1D model!"
+#        self.name = name
+#        self.l = l
+
     def __str_(self):
         return "a 1D model!"
 
@@ -31,7 +36,7 @@ class model1d(model):
 
     def get_total_size(self):
         return self.total_size
-        
+
 
 
 class model1d_new(model):

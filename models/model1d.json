@@ -1,6 +1,7 @@
 {
    "name": "1D",
    "length": 50,
+   "total_size": 150,
    "motions": [
         {"timestamp": 0,
          "start": 3,
@@ -13,6 +14,6 @@
           "end":  30},
         {"timestamp": 3,
           "start": 5,
-          "end":  7},
+          "end":  7}
    ]
 }

@@ -29,13 +29,40 @@ self.start_pt[0], self.start_pt[1], self.down_pt[0], self.down_pt[1])
     def get_h(self):
         return self.down_pt[1] - self.start_pt[1]
 
-    def get_pixels(self):
+    def get_number_of_pixels(self):
         return self.get_w() * self.get_h()
+
+    def get_timestamp(self):
+        return self.timestamp
+
+
+
+class view1d:
+    def __init__(self, timestamp, start, end):
+        self.timestamp = timestamp
+        self.start = start
+        self.end = end
+
+    def __str__(self):
+        return """view 1d, timestamp: (%d), start: (%d), end: (%d)""" % (self.timestamp, self.start, self.end)
+
+    def get_start(self):
+        return self.start
+
+    def get_end(self):
+        return self.end
+
+    def get_timestamp(self):
+        return self.timestamp
+
+    def get_number_of_pixels(self):
+        return self.end - self.start
 
 
 def test():
     m0 = view(0, (0, 0), (100, 100))
     print str(m0)
+
 
 if __name__ == '__main__':
     test()

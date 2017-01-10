@@ -13,7 +13,7 @@ from model import model
 from model1d import model1d_new
 from model1d import model1d
 from motion import view
-from tile import tile
+from tile import tile, tile1d
 from logger import logger
 
 class simulator:
@@ -134,7 +134,7 @@ class simulator:
                 tile_history.append(transmitted_tiles)
                 total_pixel = simulator.get_transmitted_pixels(transmitted_tiles, chunk_size, model.get_w(), model.get_h())
        #         curr_bdwh, total_pixel = comsume_remaining_bandwidth(curr_bdwh, total_pixel, transmitted_windows_map, transmitted_tiles)
-                actual_pixel = curr_view.get_pixels() # actual number of pixels get displayed
+                actual_pixel = curr_view.get_number_of_pixels() # actual number of pixels get displayed
                 print "total_pixel: " + str(total_pixel)
                 print "actual_pixel: " + str(actual_pixel)
                 curr_overhead += simulator.compute_ratio_overhead(total_pixel, actual_pixel)
@@ -142,23 +142,25 @@ class simulator:
                 d_over_time.append(0)
         # write a 1D model to verify
         # model is 1D, we try different tile size, with a pariticular view series
+        # TODO: make sure this is correct
         elif model.get_name() == '1D':
             transmitted_windows_map = {}
             for i in xrange(time_length):
                 curr_overhead = 0
                 curr_view = motion[i]
-                tiles = simulator.get_tiles(curr_view, model)
+                # TODO: change here
+                tiles = simulator.get_tiles1d(curr_view, model)
                 transmitted_tiles = []
                 print "tiles: " + str(tiles)
                 for tile in tiles:
                     # if current memory does not keep this tile for now and 1 frame later, transmit it
-                    if tile.get_id() not in transmitted_windows_map.keys():
+            #        if tile.get_id() not in transmitted_windows_map.keys():
                         transmitted_windows_map[tile.get_id()] = chunk_size
                         transmitted_tiles.append(tile)
                         print transmitted_windows_map
-                    elif transmitted_windows_map[tile.get_id()] < ahead_limit:
-                        transmitted_windows_map[tile.get_id()] += chunk_size
-                        transmitted_tiles.append(tile)
+            #        elif transmitted_windows_map[tile.get_id()] < ahead_limit:
+            #            transmitted_windows_map[tile.get_id()] += chunk_size
+            #            transmitted_tiles.append(tile)
                 for tile_id in transmitted_windows_map.keys():
                     if transmitted_windows_map[tile_id] == 1:
                         transmitted_windows_map.pop(tile_id, None)
@@ -170,9 +172,9 @@ class simulator:
                 history_lst.append(curr_history)
                 tile_history.append(transmitted_tiles)
 
-                total_pixel = simulator.get_transmitted_pixels(transmitted_tiles, chunk_size, model.l())
+                total_pixel = simulator.get_transmitted_pixels1d(transmitted_tiles, chunk_size, model.get_l())
        #         curr_bdwh, total_pixel = comsume_remaining_bandwidth(curr_bdwh, total_pixel, transmitted_windows_map, transmitted_tiles)
-                actual_pixel = curr_view.get_pixels() # actual number of pixels get displayed
+                actual_pixel = curr_view.get_number_of_pixels() # actual number of pixels get displayed
                 print "total_pixel: " + str(total_pixel)
                 print "actual_pixel: " + str(actual_pixel)
                 curr_overhead += simulator.compute_ratio_overhead(total_pixel, actual_pixel)
@@ -194,7 +196,7 @@ class simulator:
 
 
     @staticmethod
-    def get_tiles_1d(curr_view, model):
+    def get_tiles1d(curr_view, model):
         model_l = model.get_l()
         tiles = []
         number_of_tiles = model.get_total_size() / model.get_l()
@@ -204,10 +206,10 @@ class simulator:
             end = (i+1) * l
             if curr_view.get_start() <= start:
                 if curr_view.get_end() > start:
-                    tiles += tile(start, end)
+                    tiles.append(tile(start, end))
             elif curr_view.get_start() < end:
-                tiles += tile1d(start, end)
-         return tiles
+                tiles.append(tile1d(start, end))
+        return tiles
 
     @staticmethod
     def get_tiles(curr_view, model):
@@ -270,10 +272,11 @@ class simulator:
 
 
     @staticmethod
-    def get_transmitted_pixels(tiles, chunk_size, model_l):
+    def get_transmitted_pixels1d(tiles, chunk_size, model_l):
         print tiles
+        total_pixels = 0
         for tile in tiles:
-            total_pixels += level_l
+            total_pixels += tile.get_l()
         return total_pixels
 
 

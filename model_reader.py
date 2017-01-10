@@ -2,11 +2,12 @@
 # generate a model object
 
 from model import model, model_new
+from model1d import model1d
 #from model import model_new
 from logger import logger
 import json
 from pprint import pprint
-from motion import view
+from motion import view, view1d
 
 class model_reader:
 
@@ -16,9 +17,19 @@ class model_reader:
     @staticmethod
     def read_model(file_name):
         with open(file_name) as model_file:
+            print model_file
             model_data = json.load(model_file)
-        pprint(model_data)
+            print model_data
         model_obj = model(model_data["name"], model_data["width"], model_data["height"])
+        return model_obj
+
+    @staticmethod
+    def read_model1d(file_name):
+        with open(file_name) as model_file:
+            print model_file
+            model_data = json.load(model_file)
+            print model_data
+        model_obj = model1d(model_data["name"], model_data["length"], model_data["total_size"])
         return model_obj
 
     @staticmethod
@@ -43,6 +54,16 @@ class model_reader:
         for m in model_data["motions"]:
             motions.append(view(m["timestamp"], (m["start_pt"]['x'], m["start_pt"]['y']),
              (m['down_pt']['x'], m['down_pt']['y'])))
+        return motions
+
+    @staticmethod
+    def read_views1d(file_name):
+        with open(file_name) as model_file:
+            model_data = json.load(model_file)
+        pprint(model_data)
+        motions = []
+        for m in model_data["motions"]:
+            motions.append(view1d(m["timestamp"], m["start"], m["end"]))
         return motions
 
     @staticmethod
