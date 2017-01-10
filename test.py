@@ -10,6 +10,7 @@ from motion import view
 from plot_generator import plot_generator
 from simulator import simulator
 
+# TODO: run it 
 
 def test(test_number):
     # Test 0: 1 Layer, 2x2, 1024 x 768
@@ -92,7 +93,6 @@ def test(test_number):
         print firstframe_level0_tiles
         plot_generator.plot_tile_cube_over_time(tilehistory, fig)
         plt.show()
-
 
 
 if __name__ == '__main__':
