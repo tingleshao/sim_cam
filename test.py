@@ -70,6 +70,29 @@ def test(test_number):
         print firstframe_level0_tiles
         plot_generator.plot_tile_cube_over_time(tilehistory, fig)
         plt.show()
+    # 1D case
+    elif test_number == 3:
+        model1d = model_reader.read_model('models/model1d.json')
+        print "model name: " + model1d.get_name()
+
+        motions = model_reader.read_views('models/model1d.json')
+        fig = plt.figure()
+        fig.add_subplot(2,2,1)
+        plot_generator.plot_motion(motions, model4)
+
+        args = {"header": 10, "chunk_size": 2}
+        h_over_time, d_over_time, his, tilehistory = simulator.simulate(model4, motions, args)
+
+        print "h_over_time: " + str(h_over_time)
+        print "d_over_time: " + str(d_over_time)
+        fig.add_subplot(2,2,2)
+        plt.plot(h_over_time, 'bo-')
+        firstframe_level0_tiles = filter(lambda x: x < 4, [i.id for i in tilehistory[3]])
+        print "tilehistory: " + str(tilehistory)
+        print firstframe_level0_tiles
+        plot_generator.plot_tile_cube_over_time(tilehistory, fig)
+        plt.show()
+
 
 
 if __name__ == '__main__':
