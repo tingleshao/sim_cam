@@ -22,14 +22,43 @@ from matplotlib.widgets import Button
 
 
 class plot_generator:
-
     def __init__(self):
         print "you just initialized a plot generator. "
 
     @staticmethod
+    def plot_views1d(views, model):
+        # put the view segs over time above the scene, use a color mapping so
+        # we can see the time series
+        data = plot_generator.get_data()
+        print "plot view 1d data: " + str(data)
+        currentAxis = plt.gca()
+        currentAxis.set_xlim([0, model.get_l()])
+        currentAxis.set_ylim([0, 300])
+
+        color_lst = plot_generator.generate_color_spectrum(range(len(views)))
+        for i in xrange(len(views)):
+            v = views[i]
+            start = v.get_start()
+            end = v.get_end()
+            seg = plot_generator.get_seg(start, end)
+            currentAxis.add_patch(xxx)
+        cmap = matplotlib.colors.ListedColormap(color_lst)
+        bounds = range(len(motion)+1)
+        cax = inset_axes(currentAxis, width="8%", height='70%', loc=4)
+        cbar = matplotlib.colorbar.ColorbarBase(cax, cmap=cmap, boundaries=bounds)
+        cax.yaxis.set_ticks_position('left')
+        cax.yaxis.set_label_position('left')
+        cbar.set_label('Income (,000s)')
+
+    @staticmethod
+    def get_segment(start, end):
+        seg = np.afrray([start, end])
+        return seg
+
+    @staticmethod
     def plot_motion(motion, model):
-        # put the view boxs (over time) above the scene, use a color mapping so
-        # we can see the time transition
+        # put the view boxs over time above the scene, use a color mapping so
+        # we can see the time series
         data = plot_generator.get_data()
         print data
         img = Image.fromarray(data) # TODO: later change here to be
@@ -47,6 +76,7 @@ class plot_generator:
             w = m.down_pt[0] - m.start_pt[0]
             h = m.down_pt[1] - m.start_pt[1]
             rect = plot_generator.get_rect(m.start_pt[0], m.start_pt[1], w, h, 0)
+        # TODO: consider removing these prints
             print m.start_pt[0]/100.0
             print m.start_pt[1]/100.0
             print w/100.0
@@ -57,8 +87,9 @@ class plot_generator:
                                              alpha=1, facecolor='none',
                                              edgecolor=color_lst[i]))
         # TODO: here has some strange stupid stuff going on
+        # TODO: what are those?
         cmap = matplotlib.colors.ListedColormap(color_lst)
-        bounds=range(len(motion)+1)
+        bounds = range(len(motion)+1)
         cax = inset_axes(currentAxis, width="8%", height='70%', loc=4)
         cbar = matplotlib.colorbar.ColorbarBase(cax, cmap=cmap, boundaries=bounds)
         cax.yaxis.set_ticks_position('left')
