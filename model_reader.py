@@ -7,7 +7,7 @@ from model1d import model1d
 from logger import logger
 import json
 from pprint import pprint
-from motion import view, view1d
+from view import view, view1d
 
 class model_reader:
 
