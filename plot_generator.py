@@ -88,6 +88,7 @@ class plot_generator:
                                              edgecolor=color_lst[i]))
         # TODO: here has some strange stupid stuff going on
         # TODO: what are those?
+
         cmap = matplotlib.colors.ListedColormap(color_lst)
         bounds = range(len(motion)+1)
         cax = inset_axes(currentAxis, width="8%", height='70%', loc=4)
