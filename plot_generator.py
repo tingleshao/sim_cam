@@ -40,10 +40,10 @@ class plot_generator:
             v = views[i]
             start = v.get_start()
             end = v.get_end()
-            seg = plot_generator.get_seg(start, end)
-            currentAxis.add_patch(xxx)
+            seg = plot_generator.get_segment(start, end)
+        #    currentAxis.add_patch(xxx)
         cmap = matplotlib.colors.ListedColormap(color_lst)
-        bounds = range(len(motion)+1)
+        bounds = range(len(views)+1)
         cax = inset_axes(currentAxis, width="8%", height='70%', loc=4)
         cbar = matplotlib.colorbar.ColorbarBase(cax, cmap=cmap, boundaries=bounds)
         cax.yaxis.set_ticks_position('left')
@@ -52,7 +52,7 @@ class plot_generator:
 
     @staticmethod
     def get_segment(start, end):
-        seg = np.afrray([start, end])
+        seg = np.array([start, end])
         return seg
 
     @staticmethod

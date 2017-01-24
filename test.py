@@ -72,7 +72,7 @@ def test(test_number):
         views = model_reader.read_views1d('models/model1d.json')
         fig = plt.figure()
         fig.add_subplot(2,2,1)
-        plot_generator.plot_motion(views, model1d)
+        plot_generator.plot_views1d(views, model1d)
         args = {"header": 10, "chunk_size": 2}
         h_over_time, d_over_time, his, tilehistory = simulator.simulate(model1d, views, args)
         print "h_over_time: " + str(h_over_time)

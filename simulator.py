@@ -3,8 +3,8 @@
 #  try to make it as static as possible
 
 # Definitions:
-# Motion -> View
-# Motions -> List of Views
+# Views -> View
+# Views -> List of Views
 # Model -> Strategy
 # args: -> system status
 
@@ -17,7 +17,6 @@ from tile import tile, tile1d
 from logger import logger
 
 class simulator:
-
     def __init__(self):
         print "you just initialized a simulator!"
 
