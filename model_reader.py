@@ -3,14 +3,13 @@
 
 from model import model, model_new
 from model1d import model1d
-#from model import model_new
 from logger import logger
 import json
 from pprint import pprint
 from view import view, view1d
 
-class model_reader:
 
+class model_reader:
     def __init__(self):
         logger.debug_print("debug", "you just created a model reader!")
 

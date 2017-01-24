@@ -64,7 +64,6 @@ class plot_generator:
         img = Image.fromarray(data) # TODO: later change here to be
         #                               based on the first frame
         draw = ImageDraw.Draw(img)
-
         currentAxis = plt.gca()
         currentAxis.set_xlim([0, model.get_w()])
         currentAxis.set_ylim([0, model.get_h()])
@@ -157,7 +156,6 @@ class plot_generator:
         collection = PatchCollection(patches, cmap=plt.cm.hsv, alpha=0.3)
         collection.set_array(np.array(colors))
         ax.add_collection(collection)
-
         plt.subplots_adjust(left=0, right=1, bottom=0, top=1)
         plt.axis('equal')
         plt.axis('off')
@@ -255,7 +253,6 @@ class plot_generator:
     def plot_tile_cube_over_time(tilehistory, fig):
         tileidhistory = [[i.id for i in tiles] for tiles in tilehistory]
         level0_tileidhistory = [filter(lambda x: x < 4, tiles) for tiles in tileidhistory]
-    #    plt.subplots_adjust(bottom=0.2)
         callback = Index(level0_tileidhistory, fig)
         axprev = plt.axes([0.7, 0.05, 0.1, 0.075])
         axnext = plt.axes([0.81, 0.05, 0.1, 0.075])

@@ -12,7 +12,6 @@ from plot_generator import plot_generator
 from simulator import simulator
 
 
-# TODO: run it
 def test(test_number):
     # Test 0: 1 Layer, 2x2, 1024 x 768
     # Trivial strategy 1
@@ -67,12 +66,16 @@ def test(test_number):
 
     # 1D case
     elif test_number == 3:
+        # read model1d model and views
         model1d = model_reader.read_model1d('models/model1d.json')
-        print "model name: " + model1d.get_name()
         views = model_reader.read_views1d('models/model1d.json')
+
+        # plot the views
         fig = plt.figure()
         fig.add_subplot(2,2,1)
         plot_generator.plot_views1d(views, model1d)
+
+        # run simulation
         args = {"header": 10, "chunk_size": 2}
         h_over_time, d_over_time, his, tilehistory = simulator.simulate(model1d, views, args)
         print "h_over_time: " + str(h_over_time)
