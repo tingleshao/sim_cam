@@ -12,7 +12,7 @@
 from model import model
 from model1d import model1d_new
 from model1d import model1d
-from motion import view
+from view import view
 from tile import tile, tile1d
 from logger import logger
 

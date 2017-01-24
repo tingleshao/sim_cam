@@ -12,7 +12,7 @@ from matplotlib.collections import PatchCollection
 from matplotlib.patches import Rectangle
 from matplotlib.widgets import Button
 
-from motion import view
+from view import view
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 from mpl_toolkits.mplot3d import Axes3D
 from operator import add

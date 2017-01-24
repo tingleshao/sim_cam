@@ -6,8 +6,8 @@ import sys
 from data_saver import data_saver
 from model import model
 from model_reader import model_reader
-from motion import view
-from motion import view1d
+from view import view
+from view import view1d
 from plot_generator import plot_generator
 from simulator import simulator
 
