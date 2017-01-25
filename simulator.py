@@ -35,6 +35,7 @@ class simulator:
         history_lst = []
         tile_history = []
 
+
         time_length = len(motion)
         header_size = args.get("header")
         chunk_size = args.get("chunk_size")
