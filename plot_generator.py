@@ -6,13 +6,11 @@ import matplotlib
 import matplotlib.path as mpath
 import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
+import numpy as np
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Rectangle
 from matplotlib.widgets import Button
-import numpy as np
-
 from PIL import Image
-#import Image
 from PIL import ImageDraw
 
 from view import view

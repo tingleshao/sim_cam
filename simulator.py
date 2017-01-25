@@ -8,17 +8,15 @@
 # Model -> Strategy
 # args: -> system status
 
-
 from model import model
-from model1d import model1d_new
 from model1d import model1d
-from view import view
-from tile import tile, tile1d
+from model1d import model1d_new
 from logger import logger
+from tile import tile, tile1d
+from view import view
 
 
-
-# TODO: get the simulator work for 1d correctly 
+# TODO: get the simulator work for 1d correctly
 class simulator:
     def __init__(self):
         print "you just initialized a simulator!"
