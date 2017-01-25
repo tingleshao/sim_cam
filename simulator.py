@@ -144,7 +144,7 @@ class simulator:
 
         # write a 1D model to verify
         # model is 1D, we try different tile size, with a pariticular view series
-        elif model.get_name() == '1D':
+        elif model.get_name() == '1D'  or  model.get_name() == 'model0_1D':
             # currently we don't memorize things, so we don't use a map
             #transmitted_windows_map = {}
             for i in xrange(time_length):
@@ -152,37 +152,17 @@ class simulator:
                 curr_view = views[i]
                 # compute the required tiles for the list of views #TODO: make sure this is correct
                 tiles = simulator.get_tiles1d(curr_view, model)
-
-
                 transmitted_tiles = tiles
                 print "tiles: " + str(tiles)
-
-#                for tile in tiles:
-#                    transmitted_windows_map[tile.get_id()] = chunk_size
-#                    transmitted_tiles.append(tile)
-#                    print transmitted_windows_map
-#                for tile_id in transmitted_windows_map.keys():
-#                    if transmitted_windows_map[tile_id] == 1:
-#                        transmitted_windows_map.pop(tile_id, None)
-#                    else:
-#                        transmitted_windows_map[tile_id] = transmitted_windows_map[tile_id] - 1
-#                    curr_history = []
-#                for t in set(transmitted_windows_map):
-#                    curr_history.append([t, transmitted_windows_map[t]])
-
-#                history_lst.append(curr_history)
                 tile_history.append(transmitted_tiles)
-
                 transmitted_pixel = simulator.get_transmitted_pixels1d(transmitted_tiles, chunk_size, model.get_l()) # basically this is a multiplication
-
                 displayed_pixel = curr_view.get_number_of_pixels() # actual number of pixels get displayed
                 print "transmitted_pixel: " + str(transmitted_pixel)
                 print "displayed_pixel: " + str(displayed_pixel)
-
                 curr_overhead += simulator.compute_minus_overhead(transmitted_pixel, displayed_pixel)
                 h_over_time.append(curr_overhead)
                 d_over_time.append(0)
-
+        print "tile history: " + str([str(len(t)) for t in tile_history])
 
   # TODO: can we put the strategy into a JSON?
         return h_over_time, d_over_time, history_lst, tile_history

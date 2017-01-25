@@ -65,11 +65,14 @@ def test(test_number):
         plt.show()
 
     # 1D case
-    elif test_number == 3:
+    elif test_number == 3 or test_number == 4:
         # read model1d model and views
-        model1d = model_reader.read_model1d('models/model1d.json')
-        views = model_reader.read_views1d('models/model1d.json')
-
+        if test_number == 3:
+            model1d = model_reader.read_model1d('models/model1d.json')
+            views = model_reader.read_views1d('models/model1d.json')
+        else:
+            model1d = model_reader.read_model1d('models/model0_1d.json')
+            views = model_reader.read_views1d('models/model0_1d.json')
         # plot the views
         fig = plt.figure()
         fig.add_subplot(2,2,1)
