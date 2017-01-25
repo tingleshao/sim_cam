@@ -21,9 +21,10 @@ from PIL import Image
 from PIL import ImageDraw
 
 
+# TODO: update plot_views1d
 class plot_generator:
     def __init__(self):
-        print "you just initialized a plot generator. "
+        print "You just initialized a plot generator."
 
     @staticmethod
     def plot_views1d(views, model):
@@ -32,8 +33,14 @@ class plot_generator:
         data = plot_generator.get_data()
         print "plot view 1d data: " + str(data)
         currentAxis = plt.gca()
-        currentAxis.set_xlim([0, model.get_l()])
-        currentAxis.set_ylim([0, 300])
+        max_len = 0
+        for i in xrange(len(views)):
+            v = views[i]
+            curr_len = v.end
+            if curr_len > max_len:
+                max_len = curr_len
+        currentAxis.set_xlim([0, max_len])
+        currentAxis.set_ylim([0, len(views) * 10 + 10])
 
         color_lst = plot_generator.generate_color_spectrum(range(len(views)))
         for i in xrange(len(views)):
@@ -41,7 +48,11 @@ class plot_generator:
             start = v.get_start()
             end = v.get_end()
             seg = plot_generator.get_segment(start, end)
-        #    currentAxis.add_patch(xxx)
+            currentAxis.add_patch(Rectangle((v.start,
+                                             i*10),
+                                             v.end, 1,
+                                             alpha=1, facecolor='none',
+                                             edgecolor=color_lst[i]))
         cmap = matplotlib.colors.ListedColormap(color_lst)
         bounds = range(len(views)+1)
         cax = inset_axes(currentAxis, width="8%", height='70%', loc=4)

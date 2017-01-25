@@ -205,7 +205,7 @@ class simulator:
             end = (i+1) * l
             if curr_view.get_start() <= start:
                 if curr_view.get_end() > start:
-                    tiles.append(tile(start, end))
+                    tiles.append(tile1d(start, end))
             elif curr_view.get_start() < end:
                 tiles.append(tile1d(start, end))
         return tiles
