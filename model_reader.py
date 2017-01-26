@@ -90,8 +90,8 @@ class model_reader:
             y0 = random.uniform(0, h_length - view_h_lengths[i])
             x1 = x0 + view_w_lengths[i]
             y1 = y0 + view_h_lengths[i]
-            views.aoppend(view(i, (x0, y0) (x1, y1)))
-        return views 
+            views.append(view(i, (x0, y0), (x1, y1)))
+        return views
 
 
 if __name__ == '__main__':

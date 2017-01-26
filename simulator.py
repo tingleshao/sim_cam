@@ -16,7 +16,7 @@ from tile import tile, tile1d
 from view import view
 
 
-# TODO: get a populaiton based 2D simulation
+# TODO: run some numbers from the paper to verify the simulator 
 class simulator:
     def __init__(self):
         print "you just initialized a simulator!"

@@ -110,7 +110,7 @@ def test(test_number):
         plt.show()
     elif test_number == 7 or test_number == 8:
         model = model_reader.read_model('models/model4.json') if test_number == 7 else model_reader.read_model('models/model5.json')
-        views = model_reader.generate_views(10, 10, 2, 150) #TODO" here we will need more parameters indicating the mean of the width and the mean of t he height separately.
+        views = model_reader.generate_views(10, 10, 2, 5, 2, 2, 150) #TODO" here we will need more parameters indicating the mean of the width and the mean of t he height separately.
         # plot the views
         fig = plt.figure()
         fig.add_subplot(2,2,1)
