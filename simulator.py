@@ -34,8 +34,6 @@ class simulator:
         # at current time point, which set of tiles hase been transmitted (with lifetime)
         history_lst = []
         tile_history = []
-
-
         time_length = len(motion)
         header_size = args.get("header")
         chunk_size = args.get("chunk_size")
@@ -141,9 +139,9 @@ class simulator:
                 curr_overhead += simulator.compute_ratio_overhead(total_pixel, actual_pixel)
                 h_over_time.append(curr_overhead)
                 d_over_time.append(0)
+
         # write a 1D model to verify
         # model is 1D, we try different tile size, with a pariticular view series
-        # TODO: make sure this is correct
         elif model.get_name() == '1D':
             transmitted_windows_map = {}
             for i in xrange(time_length):
