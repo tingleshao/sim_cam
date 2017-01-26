@@ -16,6 +16,7 @@ from tile import tile, tile1d
 from view import view
 
 
+# TODO: get a populaiton based 2D simulation
 class simulator:
     def __init__(self):
         print "you just initialized a simulator!"
@@ -160,6 +161,7 @@ class simulator:
                 h_over_time.append(curr_overhead)
                 d_over_time.append(0)
         print "tile history: " + str([str(len(t)) for t in tile_history])
+
 
   # TODO: can we put the strategy into a JSON?
         return h_over_time, d_over_time, history_lst, tile_history

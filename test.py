@@ -108,6 +108,25 @@ def test(test_number):
         print firstframe_level0_tiles
         plot_generator.plot_tile_cube_over_time(tilehistory, fig)
         plt.show()
+    elif test_number == 7 or test_number == 8:
+        model = model_reader.read_model('models/model4.json') if test_number == 7 else model_reader.read_model('models/model5.json')
+        views = model_reader.generate_views(10, 10, 2, 150) #TODO" here we will need more parameters indicating the mean of the width and the mean of t he height separately.
+        # plot the views
+        fig = plt.figure()
+        fig.add_subplot(2,2,1)
+        plot_generator.plot_views(views, model)
+        # run simulation
+        args = {"header": 10, "chunk_size": 2} #TODO: what are those?
+        h_over_time, d_over_time, his, tilehistory = simulator.simulate(model, views, args)
+        print "h over time: " + str(h_over_time)
+        print "d over time: " + str(d_over_time)
+        fig.add_subplot(2,2,2)
+        plt.plot(h_over_time, 'bo-')
+        firstframe_level0_tiles = filter(lambda x: x < 4, [i.id for i in tilehistory[3]])
+        print "tile history: " + str(tilehistory)
+        print firstframe_level0_tiles
+        plot_generator.plot_tile_cube_over_time(tilehistory, fig)
+        plt.show()
 
 
 if __name__ == '__main__':

@@ -74,11 +74,24 @@ class model_reader:
     def generate_views1d(n, mean, stdev, length):
         views = []
         view_lengths = random.normal(mean, stdev, n)
-        for i in  xrange(n):
+        for i in xrange(n):
             start = random.uniform(0, length-view_lengths[i])
             end = start + view_lengths[i]
             views.append(view1d(i, start, end))
         return views
+
+    @staticmethod
+    def generate_views(n, mean_w, stdev_w, mean_h, stdev_h, w_length, h_length):
+        views = []
+        view_w_lengths = random.normal(mean_w, stdev_w, n)
+        view_h_lengths = random.normal(mean_h, stdev_h, n)
+        for i in xrange(n):
+            x0 = random.uniform(0, w_length - view_w_lengths[i])
+            y0 = random.uniform(0, h_length - view_h_lengths[i])
+            x1 = x0 + view_w_lengths[i]
+            y1 = y0 + view_h_lengths[i]
+            views.aoppend(view(i, (x0, y0) (x1, y1)))
+        return views 
 
 
 if __name__ == '__main__':
