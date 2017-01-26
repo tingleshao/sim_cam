@@ -7,6 +7,7 @@ from logger import logger
 import json
 from pprint import pprint
 from view import view, view1d
+from numpy import random
 
 
 class model_reader:
@@ -70,13 +71,13 @@ class model_reader:
         model_reader.read_model('models/model0.json')
 
     @staticmethod
-    def generate_views1d(n, mean, variance):
-        # the mean is on view length
-        # the variance is also on view length
+    def generate_views1d(n, mean, stdev, length):
         views = []
-        # generate a list of views
-        for i in xrange(n):
-            views.append()
+        view_lengths = random.normal(mean, stdev, n)
+        for i in  xrange(n):
+            start = random.uniform(0, length-view_lengths[i])
+            end = start + view_lengths[i]
+            views.append(view1d(i, start, end))
         return views
 
 

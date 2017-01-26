@@ -16,7 +16,6 @@ from tile import tile, tile1d
 from view import view
 
 
-# TODO: get the simulator work for 1d correctly
 class simulator:
     def __init__(self):
         print "you just initialized a simulator!"
@@ -34,8 +33,6 @@ class simulator:
         # at current time point, which set of tiles hase been transmitted (with lifetime)
         history_lst = []
         tile_history = []
-
-
         time_length = len(views)
         header_size = args.get("header")
         chunk_size = args.get("chunk_size")
