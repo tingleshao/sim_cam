@@ -60,10 +60,10 @@ class model_reader:
         with open(file_name) as model_file:
             model_data = json.load(model_file)
         pprint(model_data)
-        motions = []
+        views = []
         for m in model_data["motions"]:
-            motions.append(view1d(m["timestamp"], m["start"], m["end"]))
-        return motions
+            views.append(view1d(m["timestamp"], m["start"], m["end"]))
+        return views
 
     @staticmethod
     def test():
@@ -71,7 +71,13 @@ class model_reader:
 
     @staticmethod
     def generate_views1d(n, mean, variance):
-        return None
+        # the mean is on view length
+        # the variance is also on view length
+        views = []
+        # generate a list of views
+        for i in xrange(n):
+            views.append()
+        return views
 
 
 if __name__ == '__main__':
