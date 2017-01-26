@@ -16,7 +16,6 @@ from tile import tile, tile1d
 from view import view
 
 
-# TODO: get the simulator work for 1d correctly
 class simulator:
     def __init__(self):
         print "you just initialized a simulator!"

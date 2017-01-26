@@ -91,7 +91,7 @@ def test(test_number):
     # but, the views are generated from a probability distribution instead of reading from a json file
     elif test_number == 5 or test_number == 6:
         model1d = model_reader.read_model1d('models/model1d.json') if test_number == 5 else model_reader.read_model1d('models/model0_1d.json')
-        views = model_reader.generate_views1d(xxx, yyy) # xxx, yyy being the mean and variance of the Gaussian probability distribution
+        views = model_reader.generate_views1d(10, 10, 2, 150)
         # plot the views
         fig = plt.figure()
         fig.add_subplot(2,2,1)
