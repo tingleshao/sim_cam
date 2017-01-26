@@ -1,0 +1,19 @@
+{
+   "name": "model0_1D",
+   "length": 3,
+   "total_size": 150,
+   "motions": [
+        {"timestamp": 0,
+         "start": 3,
+         "end":  10},
+        {"timestamp": 1,
+          "start": 99,
+          "end":  149},
+        {"timestamp": 2,
+          "start": 20,
+          "end":  30},
+        {"timestamp": 3,
+          "start": 5,
+          "end":  7}
+   ]
+}

@@ -65,19 +65,40 @@ def test(test_number):
         plt.show()
 
     # 1D case
-    elif test_number == 3:
+    elif test_number == 3 or test_number == 4:
         # read model1d model and views
-        model1d = model_reader.read_model1d('models/model1d.json')
-        views = model_reader.read_views1d('models/model1d.json')
-
+        model1d = model_reader.read_model1d('models/model1d.json') if test_number == 3 else model_reader.read_model1d('models/model0_1d.json')
+        views = model_reader.read_views1d('models/model1d.json') if test_number == 3 else model_reader.read_views1d('models/model0_1d.json')
         # plot the views
         fig = plt.figure()
         fig.add_subplot(2,2,1)
         plot_generator.plot_views1d(views, model1d)
-
         # run simulation
-        args = {"header": 10, "chunk_size": 2}
+        args = {"header": 10, "chunk_size": 2} # TODO: what are those?
         h_over_time, d_over_time, his, tilehistory = simulator.simulate(model1d, views, args)
+        print "h_over_time: " + str(h_over_time)
+        print "d_over_time: " + str(d_over_time)
+        fig.add_subplot(2,2,2)
+        plt.plot(h_over_time, 'bo-')
+        firstframe_level0_tiles = filter(lambda x: x < 4, [i.id for i in tilehistory[3]])
+        print "tile history: " + str(tilehistory)
+        print firstframe_level0_tiles
+        plot_generator.plot_tile_cube_over_time(tilehistory, fig)
+        plt.show()
+
+    # 1D case large population simulation
+    # in this case, the slice size s is still read from a json file
+    # but, the views are generated from a probability distribution instead of reading from a json file
+    elif test_number == 5 or test_number == 6:
+        model1d = model_reader.read_model1d('models/model1d.json') if test_number == 5 else model_reader.read_model1d('models/model0_1d.json')
+        views = model_reader.generate_views1d(xxx, yyy) # xxx, yyy being the mean and variance of the Gaussian probability distribution
+        # plot the views
+        fig = plt.figure()
+        fig.add_subplot(2,2,1)
+        plot_generator.plot_views1d(views, model1d)
+        # run simulation
+        args = {"header": 10, "chunk_size": 2} # TODO: what are those?
+        h_over_time, d_over_time , his, tilehistory = simulator.simulate(model1d, views, args)
         print "h_over_time: " + str(h_over_time)
         print "d_over_time: " + str(d_over_time)
         fig.add_subplot(2,2,2)

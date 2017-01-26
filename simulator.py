@@ -23,7 +23,7 @@ class simulator:
 
     # TODO: change the h number to be the ratio (p0-p1) / p0 ...
     @staticmethod
-    def simulate(model, motion, args):
+    def simulate(model, views, args):
         # do the simulation
         # model: information about the system
         # motion: user view region
@@ -34,7 +34,7 @@ class simulator:
         # at current time point, which set of tiles hase been transmitted (with lifetime)
         history_lst = []
         tile_history = []
-        time_length = len(motion)
+        time_length = len(views)
         header_size = args.get("header")
         chunk_size = args.get("chunk_size")
         print "simulating " + model.get_name()
@@ -48,8 +48,8 @@ class simulator:
                     curr_t = 0
                     curr_overhead += header_size
                     print "total_pixel: " + str(total_pixel)
-                    print "actual_pixel: " + str((motion[i].down_pt[0] - motion[i].start_pt[0]) * (motion[i].down_pt[1] - motion[i].start_pt[1]))
-                curr_overhead += simulator.compute_ratio_overhead(total_pixel, (motion[i].down_pt[0] - motion[i].start_pt[0]) * (motion[i].down_pt[1] - motion[i].start_pt[1]))
+                    print "actual_pixel: " + str((views[i].down_pt[0] - views[i].start_pt[0]) * (views[i].down_pt[1] - views[i].start_pt[1]))
+                curr_overhead += simulator.compute_ratio_overhead(total_pixel, (views[i].down_pt[0] - views[i].start_pt[0]) * (views[i].down_pt[1] - views[i].start_pt[1]))
                 h_over_time.append(curr_overhead)
                 d_over_time.append(0)
                 curr_history = []
@@ -67,7 +67,7 @@ class simulator:
             transmitted_windows_map = {}
             for i in xrange(time_length):
                 curr_overhead = 0
-                curr_view = motion[i]
+                curr_view = views[i]
                 tiles = simulator.get_tiles(curr_view, model)
                 # update the transmitted_windows_map
                 transmitted_tiles = []
@@ -105,7 +105,7 @@ class simulator:
             transmitted_windows_map = {}
             for i in xrange(time_length):
                 curr_overhead = 0
-                curr_view = motion[i]
+                curr_view = views[i]
                 tiles = simulator.get_tiles(curr_view, model) # get list of tiles to be displayed
                 transmitted_tiles = [] # list of tiles to be transmitted
                 print "tiles to be displayed: " + str(tiles)
@@ -142,47 +142,31 @@ class simulator:
 
         # write a 1D model to verify
         # model is 1D, we try different tile size, with a pariticular view series
-        elif model.get_name() == '1D':
-            transmitted_windows_map = {}
+        elif model.get_name() == '1D'  or  model.get_name() == 'model0_1D':
+            # currently we don't memorize things, so we don't use a map
+            #transmitted_windows_map = {}
             for i in xrange(time_length):
                 curr_overhead = 0
-                curr_view = motion[i]
-                # TODO: change here
+                curr_view = views[i]
+                # compute the required tiles for the list of views #TODO: make sure this is correct
                 tiles = simulator.get_tiles1d(curr_view, model)
-                transmitted_tiles = []
+                transmitted_tiles = tiles
                 print "tiles: " + str(tiles)
-                for tile in tiles:
-                    # if current memory does not keep this tile for now and 1 frame later, transmit it
-            #        if tile.get_id() not in transmitted_windows_map.keys():
-                        transmitted_windows_map[tile.get_id()] = chunk_size
-                        transmitted_tiles.append(tile)
-                        print transmitted_windows_map
-            #        elif transmitted_windows_map[tile.get_id()] < ahead_limit:
-            #            transmitted_windows_map[tile.get_id()] += chunk_size
-            #            transmitted_tiles.append(tile)
-                for tile_id in transmitted_windows_map.keys():
-                    if transmitted_windows_map[tile_id] == 1:
-                        transmitted_windows_map.pop(tile_id, None)
-                    else:
-                        transmitted_windows_map[tile_id] = transmitted_windows_map[tile_id] - 1
-                    curr_history = []
-                for t in set(transmitted_windows_map):
-                    curr_history.append([t, transmitted_windows_map[t]])
-                history_lst.append(curr_history)
                 tile_history.append(transmitted_tiles)
-
-                total_pixel = simulator.get_transmitted_pixels1d(transmitted_tiles, chunk_size, model.get_l())
-       #         curr_bdwh, total_pixel = comsume_remaining_bandwidth(curr_bdwh, total_pixel, transmitted_windows_map, transmitted_tiles)
-                actual_pixel = curr_view.get_number_of_pixels() # actual number of pixels get displayed
-                print "total_pixel: " + str(total_pixel)
-                print "actual_pixel: " + str(actual_pixel)
-                curr_overhead += simulator.compute_ratio_overhead(total_pixel, actual_pixel)
+                transmitted_pixel = simulator.get_transmitted_pixels1d(transmitted_tiles, chunk_size, model.get_l()) # basically this is a multiplication
+                displayed_pixel = curr_view.get_number_of_pixels() # actual number of pixels get displayed
+                print "transmitted_pixel: " + str(transmitted_pixel)
+                print "displayed_pixel: " + str(displayed_pixel)
+                curr_overhead += simulator.compute_minus_overhead(transmitted_pixel, displayed_pixel)
                 h_over_time.append(curr_overhead)
                 d_over_time.append(0)
-
+        print "tile history: " + str([str(len(t)) for t in tile_history])
 
   # TODO: can we put the strategy into a JSON?
         return h_over_time, d_over_time, history_lst, tile_history
+
+
+
 
     @staticmethod
     def compute_minus_overhead(total_pixel, actual_pixel):

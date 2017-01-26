@@ -69,6 +69,10 @@ class model_reader:
     def test():
         model_reader.read_model('models/model0.json')
 
+    @staticmethod
+    def generate_views1d(n, mean, variance):
+        return None
+
 
 if __name__ == '__main__':
     model_reader.test()
