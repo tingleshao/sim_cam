@@ -16,19 +16,19 @@ from tile import tile, tile1d
 from view import view
 
 
-# TODO: run some numbers from the paper to verify the simulator 
+# TODO: run some numbers from the paper to verify the simulator
 class simulator:
     def __init__(self):
         print "you just initialized a simulator!"
 
-    # TODO: change the h number to be the ratio (p0-p1) / p0 ...
     @staticmethod
     def simulate(model, views, args):
         # do the simulation
         # model: information about the system
         # motion: user view region
         # args: other parameters
-        h_over_time = []
+        h_over_time = []# TODO: get a populaiton based 2D simulation
+
         d_over_time = []
         # history format:
         # at current time point, which set of tiles hase been transmitted (with lifetime)
