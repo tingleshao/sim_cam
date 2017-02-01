@@ -50,7 +50,7 @@ class plot_generator:
             print end
             currentAxis.add_patch(Rectangle((v.start,
                                              i*10),
-                                             v.start-v.end, 1,
+                                             v.end-v.start, 1,
                                              alpha=1, facecolor='none',
                                              edgecolor=color_lst[i]))
         cmap = matplotlib.colors.ListedColormap(color_lst)

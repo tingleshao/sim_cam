@@ -160,8 +160,15 @@ class simulator:
                 curr_overhead += simulator.compute_minus_overhead(transmitted_pixel, displayed_pixel)
                 h_over_time.append(curr_overhead)
                 d_over_time.append(0)
-        print "tile history: " + str([str(len(t)) for t in tile_history])
+        elif model.get_name() == 'model5':
+            # XXX:
+        elif model.get_name() == 'model6':
+            # XXX:
+        else:
+            print "unknown model!"
 
+
+        print "tile history: " + str([str(len(t)) for t in tile_history])
 
   # TODO: can we put the strategy into a JSON?
         return h_over_time, d_over_time, history_lst, tile_history

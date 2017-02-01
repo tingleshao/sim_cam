@@ -1,0 +1,19 @@
+{
+   "name": "model6",
+   "width": 150,
+   "height": 100,
+   "motions": [
+        {"timestamp": 0,
+         "start_pt": {"x": 1, "y": 1},
+         "down_pt":  {"x": 149, "y": 99}},
+        {"timestamp": 1,
+         "start_pt": {"x": 19, "y": 13},
+         "down_pt":  {"x": 130, "y": 87}},
+        {"timestamp": 2,
+         "start_pt": {"x": 56, "y": 20},
+         "down_pt":  {"x": 121, "y": 63}},
+        {"timestamp": 3,
+         "start_pt": {"x": 80, "y": 30},
+         "down_pt":  {"x": 110, "y": 50}}
+   ]
+}

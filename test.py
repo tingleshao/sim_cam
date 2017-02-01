@@ -44,7 +44,6 @@ def test(test_number):
         print "d_over_time: " + str(d_over_time)
         plt.plot(h_over_time, 'bo-')
         plt.show()
-
     elif test_number == 2:
         model4 = model_reader.read_model('models/model4.json')
         print "model4 name: " + model4.get_name()
@@ -63,7 +62,6 @@ def test(test_number):
         print firstframe_level0_tiles
         plot_generator.plot_tile_cube_over_time(tilehistory, fig)
         plt.show()
-
     # 1D case
     elif test_number == 3 or test_number == 4:
         # read model1d model and views
@@ -85,7 +83,6 @@ def test(test_number):
         print firstframe_level0_tiles
         plot_generator.plot_tile_cube_over_time(tilehistory, fig)
         plt.show()
-
     # 1D case large population simulation
     # in this case, the slice size s is still read from a json file
     # but, the views are generated from a probability distribution instead of reading from a json file
@@ -97,7 +94,7 @@ def test(test_number):
         fig.add_subplot(2,2,1)
         plot_generator.plot_views1d(views, model1d)
         # run simulation
-        args = {"header": 10, "chunk_size": 2} # those are additional parameters for simulation, since for 1D case we included tile size in the model file, we should also include them in the model file 
+        args = {"header": 10, "chunk_size": 2} # those are additional parameters for simulation, since for 1D case we included tile size in the model file, we should also include them in the model file
         h_over_time, d_over_time , his, tilehistory = simulator.simulate(model1d, views, args)
         print "h_over_time: " + str(h_over_time)
         print "d_over_time: " + str(d_over_time)
@@ -109,14 +106,14 @@ def test(test_number):
         plot_generator.plot_tile_cube_over_time(tilehistory, fig)
         plt.show()
     elif test_number == 7 or test_number == 8:
-        model = model_reader.read_model('models/model4.json') if test_number == 7 else model_reader.read_model('models/model5.json')
-        views = model_reader.generate_views(10, 10, 2, 5, 2, 2, 150) #TODO" here we will need more parameters indicating the mean of the width and the mean of t he height separately.
+        model = model_reader.read_model('models/model5.json') if test_number == 7 else model_reader.read_model('models/model6.json')
+        views = model_reader.generate_views(10, 10, 2, 5, 2, 2, 150)
         # plot the views
         fig = plt.figure()
         fig.add_subplot(2,2,1)
         plot_generator.plot_views(views, model)
         # run simulation
-        args = {"header": 10, "chunk_size": 2} #TODO: what are those?
+        args = {"header": 10, "chunk_size": 2}
         h_over_time, d_over_time, his, tilehistory = simulator.simulate(model, views, args)
         print "h over time: " + str(h_over_time)
         print "d over time: " + str(d_over_time)
