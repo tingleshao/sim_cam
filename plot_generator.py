@@ -36,27 +36,31 @@ class plot_generator:
             curr_len = v.end
             if curr_len > max_len:
                 max_len = curr_len
-        currentAxis.set_xlim([0, max_len])
+        currentAxis.set_xlim([0, max_len+20])
         currentAxis.set_ylim([0, len(views) * 10 + 10])
 
         color_lst = plot_generator.generate_color_spectrum(range(len(views)))
+ #       color_lst = plot_generator.generate_color_spectrum(range(1))
         for i in xrange(len(views)):
             v = views[i]
             start = v.get_start()
             end = v.get_end()
             seg = plot_generator.get_segment(start, end)
+            print start
+            print end
             currentAxis.add_patch(Rectangle((v.start,
                                              i*10),
-                                             v.end, 1,
+                                             v.start-v.end, 1,
                                              alpha=1, facecolor='none',
                                              edgecolor=color_lst[i]))
         cmap = matplotlib.colors.ListedColormap(color_lst)
         bounds = range(len(views)+1)
-        cax = inset_axes(currentAxis, width="8%", height='70%', loc=4)
-        cbar = matplotlib.colorbar.ColorbarBase(cax, cmap=cmap, boundaries=bounds)
+        cax = inset_axes(currentAxis, width="4%", height='70%', loc=4)
+    #    cbar = matplotlib.colorbar.ColorbarBase(cax, cmap=cmap, boundaries=bounds)
+        cbar = matplotlib.colorbar.ColorbarBase(cax, cmap=cmap)
         cax.yaxis.set_ticks_position('left')
         cax.yaxis.set_label_position('left')
-        cbar.set_label('Income (,000s)')
+    #    cbar.set_label('Income (,000s)')
 
     @staticmethod
     def get_segment(start, end):
@@ -111,6 +115,10 @@ class plot_generator:
         print str(['%0.2X' % i for i in color_spec])
         color_str = ['#'+x+'ef39' for x in ['%0.2X' % i for i in color_spec]]
         return color_str
+
+    @staticmethod
+    def generate_single_color():
+        return None
 
     @staticmethod
     def label(xy, text):
