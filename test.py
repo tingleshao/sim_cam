@@ -97,7 +97,7 @@ def test(test_number):
         fig.add_subplot(2,2,1)
         plot_generator.plot_views1d(views, model1d)
         # run simulation
-        args = {"header": 10, "chunk_size": 2} # TODO: what are those?
+        args = {"header": 10, "chunk_size": 2} # those are additional parameters for simulation, since for 1D case we included tile size in the model file, we should also include them in the model file 
         h_over_time, d_over_time , his, tilehistory = simulator.simulate(model1d, views, args)
         print "h_over_time: " + str(h_over_time)
         print "d_over_time: " + str(d_over_time)
