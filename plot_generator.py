@@ -68,7 +68,7 @@ class plot_generator:
         return seg
 
     @staticmethod
-    def plot_motion(motion, model):
+    def plot_views(motion, model):
         # put the view boxs over time above the scene, use a color mapping so
         # we can see the time series
         data = plot_generator.get_data()
