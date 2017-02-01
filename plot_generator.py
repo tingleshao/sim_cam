@@ -106,7 +106,7 @@ class plot_generator:
         cbar = matplotlib.colorbar.ColorbarBase(cax, cmap=cmap, boundaries=bounds)
         cax.yaxis.set_ticks_position('left')
         cax.yaxis.set_label_position('left')
-        cbar.set_label('Income (,000s)')
+        #cbar.set_label('Income (,000s)')
 
     @staticmethod
     def generate_color_spectrum(input_range):

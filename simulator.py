@@ -17,6 +17,7 @@ from view import view
 
 
 # TODO: run some numbers from the paper to verify the simulator
+# TODO: need to rewrite the simulator to remove the case by case condition based on model name
 class simulator:
     def __init__(self):
         print "you just initialized a simulator!"
@@ -161,9 +162,9 @@ class simulator:
                 h_over_time.append(curr_overhead)
                 d_over_time.append(0)
         elif model.get_name() == 'model5':
-            # XXX:
+            return None
         elif model.get_name() == 'model6':
-            # XXX:
+            return None 
         else:
             print "unknown model!"
 

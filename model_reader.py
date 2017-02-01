@@ -94,5 +94,19 @@ class model_reader:
         return views
 
 
+    @staticmethod
+    def generate_fixed_ratio_views(n, mean_w, stdev_w, w_length, h_length):
+        views = []
+        view_w_lengths = random.normal(mean_w, stdev_w, n)
+        view_h_lengths = [w * 3.0 / 4.0 for w in view_w_lengths]
+        for i in xrange(n):
+            x0 = random.uniform(0, w_length - view_w_lengths[i])
+            y0 = random.uniform(0, h_length - view_h_lengths[i])
+            x1 = x0 + view_w_lengths[i]
+            y1 = y0 + view_h_lengths[i]
+            views.append(view(i, (x0, y0), (x1, y1)))
+        return views
+
+
 if __name__ == '__main__':
     model_reader.test()

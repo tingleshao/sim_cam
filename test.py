@@ -106,8 +106,9 @@ def test(test_number):
         plot_generator.plot_tile_cube_over_time(tilehistory, fig)
         plt.show()
     elif test_number == 7 or test_number == 8:
-        model = model_reader.read_model('models/model5.json') if test_number == 7 else model_reader.read_model('models/model6.json')
-        views = model_reader.generate_views(10, 10, 2, 5, 2, 2, 150)
+        model = model_reader.read_model('models/model4.json') if test_number == 7 else model_reader.read_model('models/model4.json')
+    #W    views = model_reader.generate_views(10, 10, 2, 5, 2, 140, 100)
+        views = model_reader.generate_fixed_ratio_views(10, 50, 3, 140, 100)
         # plot the views
         fig = plt.figure()
         fig.add_subplot(2,2,1)
