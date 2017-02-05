@@ -59,7 +59,6 @@ class plot_generator:
         cbar = matplotlib.colorbar.ColorbarBase(cax, cmap=cmap)
         cax.yaxis.set_ticks_position('left')
         cax.yaxis.set_label_position('left')
-    #    cbar.set_label('Income (,000s)')
 
     @staticmethod
     def get_segment(start, end):
@@ -98,7 +97,6 @@ class plot_generator:
                                              edgecolor=color_lst[i]))
         # TODO: here has some strange stupid stuff going on
         # TODO: what are those?
-
         cmap = matplotlib.colors.ListedColormap(color_lst)
         bounds = range(len(motion)+1)
         cax = inset_axes(currentAxis, width="8%", height='70%', loc=4)
@@ -166,7 +164,6 @@ class plot_generator:
         rect = mpatches.Rectangle(grid[1]-[0.025, 0.05], 0.05, 0.1, ec="none")
         patches.append(rect)
         plot_generator.label(grid[1], "Rectangle")
-
         colors = np.linspace(0, 1, len(patches))
         collection = PatchCollection(patches, cmap=plt.cm.hsv, alpha=0.3)
         collection.set_array(np.array(colors))
