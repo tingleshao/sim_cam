@@ -40,7 +40,6 @@ class plot_generator:
         currentAxis.set_ylim([0, len(views) * 10 + 10])
 
         color_lst = plot_generator.generate_color_spectrum(range(len(views)))
- #       color_lst = plot_generator.generate_color_spectrum(range(1))
         for i in xrange(len(views)):
             v = views[i]
             start = v.get_start()
