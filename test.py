@@ -15,6 +15,8 @@ from simulator import simulator
 def test(test_number):
     # Test 0: 1 Layer, 2x2, 1024 x 768
     # Trivial strategy 1
+    average_hs = []
+
     if test_number == 0:
         # read model data and view data
         model0 = model_reader.read_model('models/model0.json')
@@ -86,29 +88,38 @@ def test(test_number):
     # 1D case large population simulation
     # in this case, the slice size s is still read from a json file
     # but, the views are generated from a probability distribution instead of reading from a json file
+
+
+    # TODO: go over different slices sizes and see the average output
     elif test_number == 5 or test_number == 6:
         model1d = model_reader.read_model1d('models/model1d.json') if test_number == 5 else model_reader.read_model1d('models/model0_1d.json')
+        print "modelid" + str(model1d)
+        ls = range(3,50,3)
         views = model_reader.generate_views1d(10, 10, 2, 150)
-        # plot the views
-        fig = plt.figure()
-        fig.add_subplot(2,2,1)
-        plot_generator.plot_views1d(views, model1d)
-        # run simulation
-        args = {"header": 10, "chunk_size": 2} # those are additional parameters for simulation, since for 1D case we included tile size in the model file, we should also include them in the model file
-        h_over_time, d_over_time , his, tilehistory = simulator.simulate(model1d, views, args)
-        print "h_over_time: " + str(h_over_time)
-        print "d_over_time: " + str(d_over_time)
-        fig.add_subplot(2,2,2)
-        plt.plot(h_over_time, 'bo-')
-        firstframe_level0_tiles = filter(lambda x: x < 4, [i.id for i in tilehistory[3]])
-        print "tile history: " + str(tilehistory)
-        print firstframe_level0_tiles
-        plot_generator.plot_tile_cube_over_time(tilehistory, fig)
-        plt.show()
+        for l in ls:
+            model1d.set_l(l)
+            # plot the views
+        #    fig = plt.figure()
+        #    fig.add_subplot(2,2,1)
+        #    plot_generator.plot_views1d(views, model1d)
+            # run simulation
+            args = {"header": 10, "chunk_size": 2} # those are additional parameters for simulation, since for 1D case we included tile size in the model file, we should also include them in the model file
+            h_over_time, d_over_time , his, tilehistory = simulator.simulate(model1d, views, args)
+            average_h = sum(h_over_time) / float(len(h_over_time))
+            average_hs.append(average_h)
+            print "h_over_time: " + str(h_over_time)
+            print "d_over_time: " + str(d_over_time)
+        #    fig.add_subplot(2,2,2)
+        #    plt.plot(h_over_time, 'bo-')
+        #    firstframe_level0_tiles = filter(lambda x: x < 4, [i.id for i in tilehistory[3]])
+        #    print "tile history: " + str(tilehistory)
+        #    print firstframe_level0_tiles
+        #    plot_generator.plot_tile_cube_over_time(tilehistory, fig)
+
     elif test_number == 7 or test_number == 8:
         model = model_reader.read_model('models/model4.json') if test_number == 7 else model_reader.read_model('models/model4.json')
     #W    views = model_reader.generate_views(10, 10, 2, 5, 2, 140, 100)
-        views = model_reader.generate_fixed_ratio_views(10, 50, 3, 140, 100)
+        views = model_reader.generate_fixed_ratio_views(100, 50, 3, 140, 100)
         # plot the views
         fig = plt.figure()
         fig.add_subplot(2,2,1)
@@ -125,6 +136,11 @@ def test(test_number):
         print firstframe_level0_tiles
         plot_generator.plot_tile_cube_over_time(tilehistory, fig)
         plt.show()
+    print "average hs: "
+    print average_hs
+    print '------------------------'
+    plt.show()
+
 
 
 if __name__ == '__main__':
