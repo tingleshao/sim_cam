@@ -95,7 +95,7 @@ def test(test_number):
         model1d = model_reader.read_model1d('models/model1d.json') if test_number == 5 else model_reader.read_model1d('models/model0_1d.json')
         print "modelid" + str(model1d)
         ls = range(3,50,3)
-        views = model_reader.generate_views1d(10, 10, 2, 150)
+        views = model_reader.generate_views1d(100, 10, 2, 150)
         for l in ls:
             model1d.set_l(l)
             # plot the views
@@ -120,10 +120,12 @@ def test(test_number):
         model = model_reader.read_model('models/model4.json') if test_number == 7 else model_reader.read_model('models/model4.json')
     #W    views = model_reader.generate_views(10, 10, 2, 5, 2, 140, 100)
         views = model_reader.generate_fixed_ratio_views(100, 50, 3, 140, 100)
+        ls = range(3,50,3)
+
         # plot the views
-        fig = plt.figure()
-        fig.add_subplot(2,2,1)
-        plot_generator.plot_views(views, model)
+    #    fig = plt.figure()
+    #    fig.add_subplot(2,2,1)
+    #    plot_generator.plot_views(views, model)
         # run simulation
         args = {"header": 10, "chunk_size": 2}
         h_over_time, d_over_time, his, tilehistory = simulator.simulate(model, views, args)
@@ -136,6 +138,7 @@ def test(test_number):
         print firstframe_level0_tiles
         plot_generator.plot_tile_cube_over_time(tilehistory, fig)
         plt.show()
+
     print "average hs: "
     print average_hs
     print '------------------------'
